@@ -8,10 +8,8 @@ What things you need to install the software and how to install them
 
 ```
 PHP 7.2
-Node JS
 Composer
-Yarn
-SQLite
+Posgres SQL
 ```
 
 ### Installing

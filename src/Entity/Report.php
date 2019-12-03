@@ -2,74 +2,132 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\UuidInterface;
 
 /**
- * Report
- *
- * @ORM\Table(name="report", indexes={@ORM\Index(name="IDX_C42F77843483B2B7", columns={"id_bin"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\ReportRepository")
  */
 class Report
 {
     /**
-     * @var string
+     * @var UuidInterface
      *
-     * @ORM\Column(name="id", type="guid", nullable=false, options={"default"="uuid_generate_v1()"})
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="report_id_seq", allocationSize=1, initialValue=1)
+     * @ORM\Column(type="uuid", unique=true)
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
      */
-    private $id = 'uuid_generate_v1()';
+    private $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="type", type="string", length=100, nullable=false)
+     * @ORM\OneToMany(targetEntity="App\Entity\ConsumerHasBin", mappedBy="id_report")
+     */
+    private $id_consumer_has_bin;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\AdminHasReport", mappedBy="id_report")
+     */
+    private $id_admin_has_report;
+
+    /**
+     * @ORM\Column(type="string", length=255)
      */
     private $type;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="status", type="string", length=100, nullable=false)
+     * @ORM\Column(type="string", length=255)
      */
     private $status;
 
     /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="time_resolved", type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
-    private $timeResolved;
+    private $time_resolved;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created_at", type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
+     * @ORM\Column(type="datetime")
      */
-    private $createdAt = 'CURRENT_TIMESTAMP';
+    private $created_at;
 
     /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
-    private $updatedAt;
+    private $updated_at;
 
-    /**
-     * @var \Bin
-     *
-     * @ORM\ManyToOne(targetEntity="Bin")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_bin", referencedColumnName="id")
-     * })
-     */
-    private $idBin;
+    public function __construct()
+    {
+        $this->id_consumer_has_bin = new ArrayCollection();
+        $this->id_admin_has_report = new ArrayCollection();
+    }
 
-    public function getId(): ?string
+    public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return Collection|ConsumerHasBin[]
+     */
+    public function getIdConsumerHasBin(): Collection
+    {
+        return $this->id_consumer_has_bin;
+    }
+
+    public function addIdConsumerHasBin(ConsumerHasBin $idConsumerHasBin): self
+    {
+        if (!$this->id_consumer_has_bin->contains($idConsumerHasBin)) {
+            $this->id_consumer_has_bin[] = $idConsumerHasBin;
+            $idConsumerHasBin->setIdReport($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIdConsumerHasBin(ConsumerHasBin $idConsumerHasBin): self
+    {
+        if ($this->id_consumer_has_bin->contains($idConsumerHasBin)) {
+            $this->id_consumer_has_bin->removeElement($idConsumerHasBin);
+            // set the owning side to null (unless already changed)
+            if ($idConsumerHasBin->getIdReport() === $this) {
+                $idConsumerHasBin->setIdReport(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|AdminHasReport[]
+     */
+    public function getIdAdminHasReport(): Collection
+    {
+        return $this->id_admin_has_report;
+    }
+
+    public function addIdAdminHasReport(AdminHasReport $idAdminHasReport): self
+    {
+        if (!$this->id_admin_has_report->contains($idAdminHasReport)) {
+            $this->id_admin_has_report[] = $idAdminHasReport;
+            $idAdminHasReport->setIdReport($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIdAdminHasReport(AdminHasReport $idAdminHasReport): self
+    {
+        if ($this->id_admin_has_report->contains($idAdminHasReport)) {
+            $this->id_admin_has_report->removeElement($idAdminHasReport);
+            // set the owning side to null (unless already changed)
+            if ($idAdminHasReport->getIdReport() === $this) {
+                $idAdminHasReport->setIdReport(null);
+            }
+        }
+
+        return $this;
     }
 
     public function getType(): ?string
@@ -98,51 +156,37 @@ class Report
 
     public function getTimeResolved(): ?\DateTimeInterface
     {
-        return $this->timeResolved;
+        return $this->time_resolved;
     }
 
-    public function setTimeResolved(?\DateTimeInterface $timeResolved): self
+    public function setTimeResolved(?\DateTimeInterface $time_resolved): self
     {
-        $this->timeResolved = $timeResolved;
+        $this->time_resolved = $time_resolved;
 
         return $this;
     }
 
     public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->createdAt;
+        return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(\DateTimeInterface $created_at): self
     {
-        $this->createdAt = $createdAt;
+        $this->created_at = $created_at;
 
         return $this;
     }
 
     public function getUpdatedAt(): ?\DateTimeInterface
     {
-        return $this->updatedAt;
+        return $this->updated_at;
     }
 
-    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    public function setUpdatedAt(?\DateTimeInterface $updated_at): self
     {
-        $this->updatedAt = $updatedAt;
+        $this->updated_at = $updated_at;
 
         return $this;
     }
-
-    public function getIdBin(): ?Bin
-    {
-        return $this->idBin;
-    }
-
-    public function setIdBin(?Bin $idBin): self
-    {
-        $this->idBin = $idBin;
-
-        return $this;
-    }
-
-
 }

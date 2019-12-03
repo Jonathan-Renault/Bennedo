@@ -1,6 +1,7 @@
 doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
+
         types:
             geography:
                 class: 'Jsor\Doctrine\PostGIS\Types\GeographyType'

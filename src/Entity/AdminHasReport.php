@@ -3,92 +3,78 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\UuidInterface;
 
 /**
- * AdminHasReport
- *
- * @ORM\Table(name="admin_has_report", indexes={@ORM\Index(name="IDX_2033C69AE218C269", columns={"id_report"}), @ORM\Index(name="IDX_2033C69A668B4C46", columns={"id_admin"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\AdminHasReportRepository")
  */
 class AdminHasReport
 {
     /**
-     * @var string
+     * @var UuidInterface
      *
-     * @ORM\Column(name="id", type="guid", nullable=false, options={"default"="uuid_generate_v1()"})
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="admin_has_report_id_seq", allocationSize=1, initialValue=1)
+     * @ORM\Column(type="uuid", unique=true)
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
      */
-    private $id = 'uuid_generate_v1()';
+    private $id;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created_at", type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
+     * @ORM\Column(type="datetime")
      */
-    private $createdAt = 'CURRENT_TIMESTAMP';
+    private $created_at;
 
     /**
-     * @var \Report
-     *
-     * @ORM\ManyToOne(targetEntity="Report")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_report", referencedColumnName="id")
-     * })
+     * @ORM\ManyToOne(targetEntity="App\Entity\Report", inversedBy="id_admin_has_report")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $idReport;
+    private $id_report;
 
     /**
-     * @var \Admin
-     *
-     * @ORM\ManyToOne(targetEntity="Admin")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_admin", referencedColumnName="id")
-     * })
+     * @ORM\ManyToOne(targetEntity="App\Entity\Admin", inversedBy="id_admin_has_report")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $idAdmin;
+    private $id_admin;
 
-    public function getId(): ?string
+    public function getId()
     {
         return $this->id;
     }
 
     public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->createdAt;
+        return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(\DateTimeInterface $created_at): self
     {
-        $this->createdAt = $createdAt;
+        $this->created_at = $created_at;
 
         return $this;
     }
 
     public function getIdReport(): ?Report
     {
-        return $this->idReport;
+        return $this->id_report;
     }
 
-    public function setIdReport(?Report $idReport): self
+    public function setIdReport(?Report $id_report): self
     {
-        $this->idReport = $idReport;
+        $this->id_report = $id_report;
 
         return $this;
     }
 
     public function getIdAdmin(): ?Admin
     {
-        return $this->idAdmin;
+        return $this->id_admin;
     }
 
-    public function setIdAdmin(?Admin $idAdmin): self
+    public function setIdAdmin(?Admin $id_admin): self
     {
-        $this->idAdmin = $idAdmin;
+        $this->id_admin = $id_admin;
 
         return $this;
     }
-
-
 }

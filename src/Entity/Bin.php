@@ -2,74 +2,77 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidInterface;
 
 /**
- * Bin
- *
- * @ORM\Table(name="bin")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\BinRepository")
  */
 class Bin
 {
     /**
-     * @var string
+     * @var UuidInterface
      *
-     * @ORM\Column(name="id", type="guid", nullable=false, options={"default"="uuid_generate_v1()"})
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="bin_id_seq", allocationSize=1, initialValue=1)
+     * @ORM\Column(type="uuid", unique=true)
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
      */
-    private $id = 'uuid_generate_v1()';
+    private $id;
 
     /**
-     * @var geography
-     *
-     * @ORM\Column(name="coord", type="geography", nullable=false)
+     * @ORM\Column(type="geography", options={"geometry_type"="POINT"})
      */
-    private $coord;
+    private $coords;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="city", type="string", length=255, nullable=false)
+     * @ORM\Column(type="string", length=255)
      */
     private $city;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="city_code", type="integer", nullable=false)
+     * @ORM\Column(type="integer")
      */
-    private $cityCode;
+    private $city_code;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created_at", type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
+     * @ORM\Column(type="datetime")
      */
-    private $createdAt = 'CURRENT_TIMESTAMP';
+    private $created_at;
 
     /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
-    private $updatedAt;
+    private $updated_at;
 
-    public function getId(): ?string
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ConsumerHasBin", mappedBy="id_bin")
+     */
+    private $id_bin;
+
+    public function __construct()
+    {
+        $this->id_bin = new ArrayCollection();
+        $this->id = Uuid::uuid4();
+        $this->created_at = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
+    }
+
+    public function getId()
     {
         return $this->id;
     }
 
-    public function getCoord()
+    public function getCoords()
     {
-        return $this->coord;
+        return $this->coords;
     }
 
-    public function setCoord($coord): self
+    public function setCoords($coords): self
     {
-        $this->coord = $coord;
+        $this->coords = $coords;
 
         return $this;
     }
@@ -88,39 +91,68 @@ class Bin
 
     public function getCityCode(): ?int
     {
-        return $this->cityCode;
+        return $this->city_code;
     }
 
-    public function setCityCode(int $cityCode): self
+    public function setCityCode(int $city_code): self
     {
-        $this->cityCode = $cityCode;
+        $this->city_code = $city_code;
 
         return $this;
     }
 
     public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->createdAt;
+        return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(\DateTimeInterface $created_at): self
     {
-        $this->createdAt = $createdAt;
+        $this->created_at = $created_at;
 
         return $this;
     }
 
     public function getUpdatedAt(): ?\DateTimeInterface
     {
-        return $this->updatedAt;
+        return $this->updated_at;
     }
 
-    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    public function setUpdatedAt(?\DateTimeInterface $updated_at): self
     {
-        $this->updatedAt = $updatedAt;
+        $this->updated_at = $updated_at;
 
         return $this;
     }
 
+    /**
+     * @return Collection|ConsumerHasBin[]
+     */
+    public function getIdBin(): Collection
+    {
+        return $this->id_bin;
+    }
 
+    public function addIdBin(ConsumerHasBin $idBin): self
+    {
+        if (!$this->id_bin->contains($idBin)) {
+            $this->id_bin[] = $idBin;
+            $idBin->setIdBin($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIdBin(ConsumerHasBin $idBin): self
+    {
+        if ($this->id_bin->contains($idBin)) {
+            $this->id_bin->removeElement($idBin);
+            // set the owning side to null (unless already changed)
+            if ($idBin->getIdBin() === $this) {
+                $idBin->setIdBin(null);
+            }
+        }
+
+        return $this;
+    }
 }

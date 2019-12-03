@@ -2,72 +2,62 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\UuidInterface;
 
 /**
- * Consumer
- *
- * @ORM\Table(name="consumer", indexes={@ORM\Index(name="IDX_705B37274E1F76F3", columns={"id_closest_bin"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\ConsumerRepository")
  */
 class Consumer
 {
     /**
-     * @var string
+     * @var UuidInterface
      *
-     * @ORM\Column(name="id", type="guid", nullable=false, options={"default"="uuid_generate_v1()"})
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="consumer_id_seq", allocationSize=1, initialValue=1)
+     * @ORM\Column(type="uuid", unique=true)
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
      */
-    private $id = 'uuid_generate_v1()';
+    private $id;
 
     /**
-     * @var geography|null
-     *
-     * @ORM\Column(name="coords", type="geography", nullable=true)
+     * @ORM\Column(type="geography", nullable=true, options={"geometry_type"="POINT"})
      */
     private $coords;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="ip_address", type="string", length=255, nullable=false)
+     * @ORM\Column(type="uuid")
      */
-    private $ipAddress;
+    private $id_closest_bin;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="device", type="string", length=100, nullable=false)
+     * @ORM\Column(type="string", length=255)
      */
     private $device;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="navigator", type="string", length=100, nullable=false)
+     * @ORM\Column(type="string", length=255)
      */
     private $navigator;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created_at", type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
+     * @ORM\Column(type="datetime")
      */
-    private $createdAt = 'CURRENT_TIMESTAMP';
+    private $created_at;
 
     /**
-     * @var \Bin
-     *
-     * @ORM\ManyToOne(targetEntity="Bin")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_closest_bin", referencedColumnName="id")
-     * })
+     * @ORM\OneToMany(targetEntity="App\Entity\ConsumerHasBin", mappedBy="id_consumer")
      */
-    private $idClosestBin;
+    private $id_consumer;
 
-    public function getId(): ?string
+    public function __construct()
+    {
+        $this->id_consumer = new ArrayCollection();
+    }
+
+    public function getId()
     {
         return $this->id;
     }
@@ -84,14 +74,14 @@ class Consumer
         return $this;
     }
 
-    public function getIpAddress(): ?string
+    public function getIdClosestBin()
     {
-        return $this->ipAddress;
+        return $this->id_closest_bin;
     }
 
-    public function setIpAddress(string $ipAddress): self
+    public function setIdClosestBin($id_closest_bin): self
     {
-        $this->ipAddress = $ipAddress;
+        $this->id_closest_bin = $id_closest_bin;
 
         return $this;
     }
@@ -122,27 +112,44 @@ class Consumer
 
     public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->createdAt;
+        return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(\DateTimeInterface $created_at): self
     {
-        $this->createdAt = $createdAt;
+        $this->created_at = $created_at;
 
         return $this;
     }
 
-    public function getIdClosestBin(): ?Bin
+    /**
+     * @return Collection|ConsumerHasBin[]
+     */
+    public function getIdConsumer(): Collection
     {
-        return $this->idClosestBin;
+        return $this->id_consumer;
     }
 
-    public function setIdClosestBin(?Bin $idClosestBin): self
+    public function addIdConsumer(ConsumerHasBin $idConsumer): self
     {
-        $this->idClosestBin = $idClosestBin;
+        if (!$this->id_consumer->contains($idConsumer)) {
+            $this->id_consumer[] = $idConsumer;
+            $idConsumer->setIdConsumer($this);
+        }
 
         return $this;
     }
 
+    public function removeIdConsumer(ConsumerHasBin $idConsumer): self
+    {
+        if ($this->id_consumer->contains($idConsumer)) {
+            $this->id_consumer->removeElement($idConsumer);
+            // set the owning side to null (unless already changed)
+            if ($idConsumer->getIdConsumer() === $this) {
+                $idConsumer->setIdConsumer(null);
+            }
+        }
 
+        return $this;
+    }
 }

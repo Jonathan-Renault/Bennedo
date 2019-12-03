@@ -2,69 +2,67 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\UuidInterface;
 
 /**
- * Admin
- *
- * @ORM\Table(name="admin")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\AdminRepository")
  */
 class Admin
 {
     /**
-     * @var string
+     * @var UuidInterface
      *
-     * @ORM\Column(name="id", type="guid", nullable=false, options={"default"="uuid_generate_v1()"})
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="admin_id_seq", allocationSize=1, initialValue=1)
+     * @ORM\Column(type="uuid", unique=true)
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
      */
-    private $id = 'uuid_generate_v1()';
+    private $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="login", type="string", length=255, nullable=false)
+     * @ORM\Column(type="string", length=255)
      */
     private $login;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="password", type="string", length=255, nullable=false)
+     * @ORM\Column(type="string", length=255)
      */
     private $password;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="token", type="string", length=255, nullable=false)
+     * @ORM\Column(type="string", length=255)
      */
     private $token;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="role", type="string", length=100, nullable=false)
+     * @ORM\Column(type="string", length=100)
      */
     private $role;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created_at", type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
+     * @ORM\Column(type="datetime")
      */
-    private $createdAt = 'CURRENT_TIMESTAMP';
+    private $created_at;
 
     /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
-    private $updatedAt;
+    private $updated_at;
 
-    public function getId(): ?string
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\AdminHasReport", mappedBy="id_admin")
+     */
+    private $id_admin_has_report;
+
+    public function __construct()
+    {
+        $this->id_admin_has_report = new ArrayCollection();
+    }
+
+    public function getId()
     {
         return $this->id;
     }
@@ -119,27 +117,56 @@ class Admin
 
     public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->createdAt;
+        return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(\DateTimeInterface $created_at): self
     {
-        $this->createdAt = $createdAt;
+        $this->created_at = $created_at;
 
         return $this;
     }
 
     public function getUpdatedAt(): ?\DateTimeInterface
     {
-        return $this->updatedAt;
+        return $this->updated_at;
     }
 
-    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    public function setUpdatedAt(?\DateTimeInterface $updated_at): self
     {
-        $this->updatedAt = $updatedAt;
+        $this->updated_at = $updated_at;
 
         return $this;
     }
 
+    /**
+     * @return Collection|AdminHasReport[]
+     */
+    public function getIdAdminHasReport(): Collection
+    {
+        return $this->id_admin_has_report;
+    }
 
+    public function addIdAdminHasReport(AdminHasReport $idAdminHasReport): self
+    {
+        if (!$this->id_admin_has_report->contains($idAdminHasReport)) {
+            $this->id_admin_has_report[] = $idAdminHasReport;
+            $idAdminHasReport->setIdAdmin($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIdAdminHasReport(AdminHasReport $idAdminHasReport): self
+    {
+        if ($this->id_admin_has_report->contains($idAdminHasReport)) {
+            $this->id_admin_has_report->removeElement($idAdminHasReport);
+            // set the owning side to null (unless already changed)
+            if ($idAdminHasReport->getIdAdmin() === $this) {
+                $idAdminHasReport->setIdAdmin(null);
+            }
+        }
+
+        return $this;
+    }
 }

@@ -3,114 +3,113 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\UuidInterface;
 
 /**
- * ConsumerHasBin
- *
- * @ORM\Table(name="consumer_has_bin", indexes={@ORM\Index(name="IDX_EB430E02E218C269", columns={"id_report"}), @ORM\Index(name="IDX_EB430E022080DBB2", columns={"id_consumer"}), @ORM\Index(name="IDX_EB430E023483B2B7", columns={"id_bin"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\ConsumerHasBinRepository")
  */
 class ConsumerHasBin
 {
     /**
-     * @var string
+     * @var UuidInterface
      *
-     * @ORM\Column(name="id", type="guid", nullable=false, options={"default"="uuid_generate_v1()"})
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="consumer_has_bin_id_seq", allocationSize=1, initialValue=1)
+     * @ORM\Column(type="uuid", unique=true)
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
      */
-    private $id = 'uuid_generate_v1()';
+    private $id;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created_at", type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
+     * @ORM\Column(type="string", length=255)
      */
-    private $createdAt = 'CURRENT_TIMESTAMP';
+    private $action;
 
     /**
-     * @var \Report
-     *
-     * @ORM\ManyToOne(targetEntity="Report")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_report", referencedColumnName="id")
-     * })
+     * @ORM\Column(type="datetime")
      */
-    private $idReport;
+    private $created_at;
 
     /**
-     * @var \Consumer
-     *
-     * @ORM\ManyToOne(targetEntity="Consumer")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_consumer", referencedColumnName="id")
-     * })
+     * @ORM\ManyToOne(targetEntity="App\Entity\Bin", inversedBy="id_bin")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $idConsumer;
+    private $id_bin;
 
     /**
-     * @var \Bin
-     *
-     * @ORM\ManyToOne(targetEntity="Bin")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_bin", referencedColumnName="id")
-     * })
+     * @ORM\ManyToOne(targetEntity="App\Entity\Consumer", inversedBy="id_consumer")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $idBin;
+    private $id_consumer;
 
-    public function getId(): ?string
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Report", inversedBy="id_consumer_has_bin")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $id_report;
+
+    public function getId()
     {
         return $this->id;
     }
 
+    public function getAction(): ?string
+    {
+        return $this->action;
+    }
+
+    public function setAction(string $action): self
+    {
+        $this->action = $action;
+
+        return $this;
+    }
+
     public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->createdAt;
+        return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(\DateTimeInterface $created_at): self
     {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getIdReport(): ?Report
-    {
-        return $this->idReport;
-    }
-
-    public function setIdReport(?Report $idReport): self
-    {
-        $this->idReport = $idReport;
-
-        return $this;
-    }
-
-    public function getIdConsumer(): ?Consumer
-    {
-        return $this->idConsumer;
-    }
-
-    public function setIdConsumer(?Consumer $idConsumer): self
-    {
-        $this->idConsumer = $idConsumer;
+        $this->created_at = $created_at;
 
         return $this;
     }
 
     public function getIdBin(): ?Bin
     {
-        return $this->idBin;
+        return $this->id_bin;
     }
 
-    public function setIdBin(?Bin $idBin): self
+    public function setIdBin(?Bin $id_bin): self
     {
-        $this->idBin = $idBin;
+        $this->id_bin = $id_bin;
 
         return $this;
     }
 
+    public function getIdConsumer(): ?Consumer
+    {
+        return $this->id_consumer;
+    }
 
+    public function setIdConsumer(?Consumer $id_consumer): self
+    {
+        $this->id_consumer = $id_consumer;
+
+        return $this;
+    }
+
+    public function getIdReport(): ?Report
+    {
+        return $this->id_report;
+    }
+
+    public function setIdReport(?Report $id_report): self
+    {
+        $this->id_report = $id_report;
+
+        return $this;
+    }
 }

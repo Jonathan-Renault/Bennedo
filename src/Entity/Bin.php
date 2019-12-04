@@ -24,6 +24,11 @@ class Bin
     private $id;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $name;
+
+    /**
      * @ORM\Column(type="geography", options={"geometry_type"="POINT"})
      */
     private $coords;
@@ -152,6 +157,18 @@ class Bin
                 $idBin->setIdBin(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
 
         return $this;
     }

@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
 /**
@@ -61,6 +62,8 @@ class Report
     {
         $this->id_consumer_has_bin = new ArrayCollection();
         $this->id_admin_has_report = new ArrayCollection();
+        $this->id = Uuid::uuid4();
+        $this->created_at = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
     }
 
     public function getId()

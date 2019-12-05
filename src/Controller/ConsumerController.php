@@ -33,13 +33,24 @@ class ConsumerController extends AbstractController
      */
     public function getAllConsumers()
     {
+        $consumers = $this->getDoctrine()
+            ->getRepository(Consumer::class)
+            ->findAll();
 
+        if (!$consumers) {
+            throw $this->createNotFoundException('Aucun élément trouvé dans la table \'consumer\'');
+        } else {
+            $response = new Response(json_encode($consumers));
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
+        }
     }
 
     /**
-     * @Route("/consumers/getsome/{}", name="consumer_getsome")
+     * @Route("/consumers/getsome/{ip}", name="consumer_getsome")
+     * @param $ip
      */
-    public function getSomeConsumers()
+    public function getSomeConsumers($ip)
     {
 
     }

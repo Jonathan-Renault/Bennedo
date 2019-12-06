@@ -38,7 +38,7 @@ class ConsumerController extends AbstractController
             ->findAllConsumers();
 
         if (empty($consumers)) {
-            throw $this->createNotFoundException('Aucun élément trouvé dans la table \'consumer\'');
+            return new Response('Aucun élément trouvé dans la table \'consumer\'.');
         } else {
             $response = new Response(json_encode($consumers));
             $response->headers->set('Content-Type', 'application/json');
@@ -58,7 +58,7 @@ class ConsumerController extends AbstractController
             ->findSomeConsumers($ip);
 
         if (empty($consumers)) {
-            throw $this->createNotFoundException('Aucun élément contenant cette adresse IP trouvé dans la table \'consumer\'');
+            return new Response('Aucun élément contenant cette adresse IP trouvé dans la table \'consumer\'.');
         } else {
             $response = new Response(json_encode($consumers));
             $response->headers->set('Content-Type', 'application/json');
@@ -71,6 +71,20 @@ class ConsumerController extends AbstractController
      */
     public function cleanConsumersTable()
     {
+        $consumers = $this->getDoctrine()
+            ->getRepository(Consumer::class)
+            ->findAllConsumers();
 
+        if(!$consumers) {
+            return new Response("Le traitement n'a pas pu être effectué car la table est vide.");
+        } else {
+            /*
+             * Code d'archivage de la table (ainsi que les tables contenant des clés étrangères) à écrire
+             */
+
+            $this->getDoctrine()->getRepository(Consumer::class)->cleanConsumers();
+
+            return new Response('Le traitement a bien été effectué.');
+        }
     }
 }

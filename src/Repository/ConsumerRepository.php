@@ -59,11 +59,28 @@ class ConsumerRepository extends ServiceEntityRepository
 
     public function findSomeConsumers(string $ip) {
         $query = $this->createQueryBuilder('c')
-            ->where("c.ip_address = :ip")
+            ->where('c.ip_address = :ip')
             ->setParameter(':ip', $ip)
             ->orderBy('c.created_at','DESC')
             ->getQuery();
 
         return $query->getArrayResult();
+    }
+
+    public function findOneConsumer($id) {
+        $query = $this->createQueryBuilder('c')
+            ->where('c.id = :id')
+            ->setParameter(':id',$id)
+            ->getQuery();
+
+        return $query->getArrayResult();
+    }
+
+    public function cleanConsumers() {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = 'TRUNCATE TABLE consumer CASCADE';
+        $statement = $conn->prepare($sql);
+        $statement->execute();
     }
 }

@@ -29,6 +29,11 @@ class Consumer
     private $coords;
 
     /**
+     * @ORM\Column(type="string")
+     */
+    private $ip_address;
+
+    /**
      * @ORM\Column(type="uuid")
      */
     private $id_closest_bin;

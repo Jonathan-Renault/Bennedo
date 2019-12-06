@@ -47,4 +47,23 @@ class ConsumerRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findAllConsumers() {
+        $query = $this->createQueryBuilder('c')
+            ->where('1 = 1')
+            ->orderBy('c.created_at','DESC')
+            ->getQuery();
+
+        return $query->getArrayResult();
+    }
+
+    public function findSomeConsumers(string $ip) {
+        $query = $this->createQueryBuilder('c')
+            ->where("c.ip_address = :ip")
+            ->setParameter(':ip', $ip)
+            ->orderBy('c.created_at','DESC')
+            ->getQuery();
+
+        return $query->getArrayResult();
+    }
 }

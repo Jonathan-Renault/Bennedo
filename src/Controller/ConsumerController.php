@@ -35,9 +35,9 @@ class ConsumerController extends AbstractController
     {
         $consumers = $this->getDoctrine()
             ->getRepository(Consumer::class)
-            ->findAll();
+            ->findAllConsumers();
 
-        if (!$consumers) {
+        if (empty($consumers)) {
             throw $this->createNotFoundException('Aucun élément trouvé dans la table \'consumer\'');
         } else {
             $response = new Response(json_encode($consumers));
@@ -49,10 +49,21 @@ class ConsumerController extends AbstractController
     /**
      * @Route("/consumers/getsome/{ip}", name="consumer_getsome")
      * @param $ip
+     * @return Response
      */
     public function getSomeConsumers($ip)
     {
+        $consumers = $this->getDoctrine()
+            ->getRepository(Consumer::class)
+            ->findSomeConsumers($ip);
 
+        if (empty($consumers)) {
+            throw $this->createNotFoundException('Aucun élément contenant cette adresse IP trouvé dans la table \'consumer\'');
+        } else {
+            $response = new Response(json_encode($consumers));
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
+        }
     }
 
     /**

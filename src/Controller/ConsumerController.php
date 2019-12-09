@@ -16,8 +16,7 @@ class ConsumerController extends AbstractController
     public function index()
     {
         return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/ConsumerController.php',
+            'message' => 'La route de test des connexions utilisateurs est fonctionnelle !'
         ]);
     }
 

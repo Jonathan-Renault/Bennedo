@@ -47,4 +47,40 @@ class ReportRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findAllReports() {
+        $query = $this->createQueryBuilder('c')
+            ->where('1 = 1')
+            ->orderBy('c.created_at','DESC')
+            ->getQuery();
+
+        return $query->getArrayResult();
+    }
+
+    public function findActiveReports() {
+        $query = $this->createQueryBuilder('c')
+            ->where('c.status = :status')
+            ->setParameter(':status', "resolved")
+            ->orderBy('c.created_at','ASC')
+            ->getQuery();
+
+        return $query->getArrayResult();
+    }
+
+    public function findOneReport($id) {
+        $query = $this->createQueryBuilder('c')
+            ->where('c.id = :id')
+            ->setParameter(':id',$id)
+            ->getQuery();
+
+        return $query->getArrayResult();
+    }
+
+    public function cleanReports() {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = 'TRUNCATE TABLE consumer CASCADE';
+        $statement = $conn->prepare($sql);
+        $statement->execute();
+    }
 }

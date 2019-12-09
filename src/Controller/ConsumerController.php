@@ -32,8 +32,6 @@ class ConsumerController extends AbstractController
         var_dump($datas);
 
         $consumer = new Consumer();
-        $currentTime = date('Y-m-d h:i:s.u');
-/*        $currentTime = new Timestamp('now');*/
         $consumer->setCoords($datas[0]['coords'])
             ->setIpAddress($datas[0]['ip_address'])
             ->setIdClosestBin($datas[0]['id_closest_bin'])

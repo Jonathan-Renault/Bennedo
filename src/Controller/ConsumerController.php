@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Consumer;
@@ -22,10 +23,28 @@ class ConsumerController extends AbstractController
 
     /**
      * @Route("/consumers/create", name="consumer_create")
+     * @param Request $req
+     * @return Response
      */
-    public function createConsumer()
+    public function createConsumer(Request $req)
     {
+        $datas = json_decode($req->getContent(), true);
+        var_dump($datas);
 
+        $consumer = new Consumer();
+        $currentTime = date('Y-m-d h:i:s.u');
+/*        $currentTime = new Timestamp('now');*/
+        $consumer->setCoords($datas[0]['coords'])
+            ->setIpAddress($datas[0]['ip_address'])
+            ->setIdClosestBin($datas[0]['id_closest_bin'])
+            ->setDevice($datas[0]['device'])
+            ->setNavigator($datas[0]['navigator']);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($consumer);
+        $entityManager->flush();
+
+        return new Response('', Response::HTTP_CREATED);
     }
 
     /**

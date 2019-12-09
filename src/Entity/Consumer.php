@@ -82,6 +82,18 @@ class Consumer
         return $this;
     }
 
+    public function getIpAddress()
+    {
+        return $this->ip_address;
+    }
+
+    public function setIpAddress($ip_address)
+    {
+        $this->ip_address = $ip_address;
+
+        return $this;
+    }
+
     public function getIdClosestBin()
     {
         return $this->id_closest_bin;

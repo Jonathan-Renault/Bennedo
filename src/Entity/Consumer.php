@@ -29,6 +29,11 @@ class Consumer
     private $coords;
 
     /**
+     * @ORM\Column(type="string")
+     */
+    private $ip_address;
+
+    /**
      * @ORM\Column(type="uuid")
      */
     private $id_closest_bin;
@@ -73,6 +78,18 @@ class Consumer
     public function setCoords($coords): self
     {
         $this->coords = $coords;
+
+        return $this;
+    }
+
+    public function getIpAddress()
+    {
+        return $this->ip_address;
+    }
+
+    public function setIpAddress($ip_address)
+    {
+        $this->ip_address = $ip_address;
 
         return $this;
     }

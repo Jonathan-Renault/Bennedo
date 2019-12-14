@@ -14,7 +14,7 @@ use Ramsey\Uuid\UuidInterface;
 class Report
 {
     /**
-     * @var UuidInterface
+     * @var Uuid
      *
      * @ORM\Id
      * @ORM\Column(type="uuid", unique=true)
@@ -191,5 +191,10 @@ class Report
         $this->updated_at = $updated_at;
 
         return $this;
+    }
+
+    public function getSlug(): string
+    {
+        return (new Slugify())->slugify($this->title);
     }
 }

@@ -47,4 +47,35 @@ class AdminRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findAllAdmin()
+    {
+        $query = $this->createQueryBuilder('c')
+            ->where('1 = 1')
+            ->orderBy('c.created_at', 'DESC')
+            ->getQuery();
+
+        return $query->getArrayResult();
+    }
+
+    public function findAdmin($id)
+    {
+        $query = $this->createQueryBuilder('c')
+            ->where('c.id = :id')
+            ->setParameter(':id', $id)
+            ->getQuery();
+        return $query->getArrayResult();
+    }
+
+    public function removeAdmin($id)
+    {
+        $query = $this->getEntityManager()->getConnection();
+
+        $sql = "DELETE FROM admin
+                        WHERE id='" . $id . "'";
+        $statement = $query->prepare($sql);
+        $statement->execute();
+    }
+
+
 }

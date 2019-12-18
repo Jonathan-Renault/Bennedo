@@ -77,5 +77,10 @@ class AdminRepository extends ServiceEntityRepository
         $statement->execute();
     }
 
+    public function updateAdmin(Admin $admin): Admin {
+        $this->getEntityManager()->persist($admin);
+        $this->getEntityManager()->flush();
+        return $admin;
+    }
 
 }

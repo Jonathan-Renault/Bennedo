@@ -1,40 +1,27 @@
 <?php
 
+
 namespace App\Controller;
 
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-
 
 class SecurityController extends AbstractController
 {
     /**
-     * @Route("/login", name="login")
-     * @param AuthenticationUtils $authenticationUtils
-     * @return Response
+     * @Route("/auth", name="auth", methods={"POST"})
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    public function login(Admin $admin, Request $request)
     {
-        $error = $authenticationUtils->getLastAuthenticationError();
-        $lastUsername = $authenticationUtils->getLastUsername();
-
-        return $this->render('security/login.html.twig', [
-            'last_username' => $lastUsername,
-            'error' => $error
+        $admin = $this->getUser();
+        return $this->json([
+            'login' => $admin->getLogin(),
+            'roles' => $admin->getRoles(),
         ]);
-
-    }
-
-    /**
-     * @Route("/app_logout")
-     * @return RedirectResponse
-     */
-    public function logout()
-    {
-        return $this->redirectToRoute('login');
     }
 }

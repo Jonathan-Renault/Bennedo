@@ -21,13 +21,13 @@ class ReportController extends AbstractController
      * ReportController constructor.
      * @param ObjectManager $em
      */
-    public function __construct(ObjectManager $em)
+    public function __construct($em)
     {
         $this->em = $em;
     }
 
     /**
-     * @Route("/report/all", name="report.all")
+     * @Route("/report/all", name="report.all", methods={"GET"})
      * @return Response
      */
     public function allReport()
@@ -45,7 +45,7 @@ class ReportController extends AbstractController
     }
 
     /**
-     * @Route("report/{id}", name="report.one")
+     * @Route("report/{id}", name="report.one", methods={"GET"})
      * @param $id
      * @return Response
      */

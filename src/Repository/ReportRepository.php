@@ -60,7 +60,7 @@ class ReportRepository extends ServiceEntityRepository
     public function findActiveReports() {
         $query = $this->createQueryBuilder('c')
             ->where('c.status = :status')
-            ->setParameter(':status', "resolved")
+            ->setParameter(':status', "active")
             ->orderBy('c.created_at','ASC')
             ->getQuery();
 
@@ -71,6 +71,16 @@ class ReportRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('c')
             ->where('c.id = :id')
             ->setParameter(':id',$id)
+            ->getQuery();
+
+        return $query->getArrayResult();
+    }
+
+    public function findIfReportIsActive($id) {
+        $query = $this->createQueryBuilder('c')
+            ->where('c.id = :id AND c.status = :status')
+            ->setParameter(':id',$id)
+            ->setParameter(':status', 'active')
             ->getQuery();
 
         return $query->getArrayResult();

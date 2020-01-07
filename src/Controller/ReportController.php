@@ -26,6 +26,25 @@ class ReportController extends AbstractController
      */
     public function createReport(Request $req)
     {
+        $datas = json_decode($req->getContent(), true);
+        var_dump($datas);
+
+        $idBin = $datas[0]['id_bin'];
+        $verifReport = $this->getDoctrine()
+            ->getRepository(Report::class)
+            ->findOneReport($idBin);     //verify if the report for this bin does not already exists with an active status
+
+        if (empty($verifReport)) {
+            $report = new Report();
+            $report->setIdBin($datas[0]['id_bin'])
+                ->setType($datas[0]['type'])
+                ->setStatus('active');
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($report);
+            $entityManager->flush();
+        }
+
 
     }
 
@@ -83,6 +102,28 @@ class ReportController extends AbstractController
             $response = new Response(json_encode($reports));
             $response->headers->set('Content-Type', 'application/json');
             return $response;
+        }
+    }
+
+    /**
+     * @Route("/reports/clean", name="report_clean")
+     */
+    public function cleanReportsTable()
+    {
+        $consumers = $this->getDoctrine()
+            ->getRepository(Report::class)
+            ->findAllConsumers();
+
+        if(!$consumers) {
+            return new Response("Le traitement n'a pas pu être effectué car la table est vide.");
+        } else {
+            /*
+             * Code d'archivage de la table (ainsi que les tables contenant des clés étrangères) à écrire
+             */
+
+            $this->getDoctrine()->getRepository(Report::class)->cleanReports();
+
+            return new Response('Le traitement a bien été effectué.');
         }
     }
 }

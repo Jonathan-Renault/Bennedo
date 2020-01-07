@@ -28,7 +28,6 @@ class ConsumerController extends AbstractController
     public function createConsumer(Request $req)
     {
         $datas = json_decode($req->getContent(), true);
-        var_dump($datas);
 
         $consumer = new Consumer();
         $consumer->setCoords($datas[0]['coords'])

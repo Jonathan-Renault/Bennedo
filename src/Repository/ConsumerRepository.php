@@ -47,4 +47,16 @@ class ConsumerRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function findBin()
+    {
+        $query = $this->createQueryBuilder('c')
+            ->leftJoin('bin', 'b')
+            ->where('ST_DWithin(c.coord, b.coord, 500)')
+            ->select('b.id','b.city', 'b.city_code', 'b.coords', 'b.created_at', 'b.name', 'b.updated_at')
+            ->getQuery()
+            ;
+
+        return $query->getResult();
+
+    }
 }

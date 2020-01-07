@@ -5,6 +5,9 @@ namespace App\Repository;
 use App\Entity\Bin;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use http\Header\Parser;
+use Jsor\Doctrine\PostGIS\Functions\ST_DWithin;
+use function Doctrine\ORM\QueryBuilder;
 
 /**
  * @method Bin|null find($id, $lockMode = null, $lockVersion = null)

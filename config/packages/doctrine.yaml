@@ -22,10 +22,13 @@ doctrine:
 
         dql:
             string_functions:
-                ST_DWithin: Jsor\Doctrine\PostGIS\Functions\ST_DWithin
+                Geography: Jsor\Doctrine\PostGIS\Functions\Geography
+                ST_DWITHIN: Jsor\Doctrine\PostGIS\Functions\ST_DWithin
                 ST_Point: Jsor\Doctrine\PostGIS\Functions\ST_Point
-                ST_SRID: Jsor\Doctrine\PostGIS\Functions\ST_SRID
-                ST_GeomFromText: Jsor\Doctrine\PostGIS\Functions\ST_GeomFromText
+                ST_SetSRID: Jsor\Doctrine\PostGIS\Functions\ST_SetSRID
+                ST_Transform: Jsor\Doctrine\PostGIS\Functions\ST_Transform
+                ST_GeographyFromText: Jsor\Doctrine\PostGIS\Functions\ST_GeographyFromText
+
         mappings:
             App:
                 is_bundle: false

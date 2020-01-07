@@ -6,11 +6,12 @@ use App\Entity\Bin;
 use App\Repository\BinRepository;
 use App\Repository\ConsumerRepository;
 use App\Service\ApiToulouseService;
+use http\Env\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Jsor\Doctrine\PostGIS\Functions\ST_ClosestPoint;
-
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 class UpdateBinsController extends AbstractController
 {
     /**
@@ -42,10 +43,13 @@ class UpdateBinsController extends AbstractController
 
     /**
      * @Route("/bins/getone", name="bin_getone")
+     * @param Request $req
+     * @return Response
      */
-    public function getone(ConsumerRepository $consumerRepository)
+    public function getone(BinRepository $binRepository,\Symfony\Component\HttpFoundation\Request $req)
     {
-        $array = $consumerRepository->findBin();
+        $datas = json_decode($req->getContent(), true);
+        $array = $binRepository->findbycoord($datas[0]['a'],$datas[0]['l'],$datas[0]['r']);
         $result = json_encode($array, true);
         return new Response(
             $result

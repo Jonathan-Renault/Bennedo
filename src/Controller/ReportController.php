@@ -29,7 +29,7 @@ class ReportController extends AbstractController
     {
         $datas = json_decode($req->getContent(), true);
         /*
-         * datas -> id_bin, id_consumer, action (confirm problem or refute problem), type (full, broken)
+         * datas -> id_bin, id_consumer, action (report problem, confirm problem or refute problem), type (full, broken)
          */
         var_dump($datas);
 
@@ -37,9 +37,13 @@ class ReportController extends AbstractController
 
         $id_consumer = $datas[0]['id_consumer'];
         $id_bin = $datas[0]['id_bin'];
+
         $verifReport = $this->getDoctrine()
             ->getRepository(Report::class)
-            ->findOneReport($id_bin);     //verify if the report for this bin does not already exists with an active status
+            ->findIfReportIsActive($id_bin);     //verify if the report for this bin does not already exists with an active status
+
+        $verifReport = json_encode($verifReport);
+        $verifReport = json_decode($verifReport, true);
 
         $entityManager = $this->getDoctrine()->getManager();
 
@@ -56,10 +60,12 @@ class ReportController extends AbstractController
                 ->getRepository(Report::class)
                 ->getLastReport();
 
-            $id_report = $newReport->getId;
-            $action = "report";
+            $newReport = json_encode($newReport);
+            $newReport = json_decode($newReport, true);
+
+            $id_report = $newReport[0]['id'];
         } else {
-            $id_report = $verifReport->getId;
+            $id_report = $verifReport[0]['id'];
         }
 
         $actionService = new ConsumerActionsService();

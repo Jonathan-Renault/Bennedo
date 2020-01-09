@@ -76,10 +76,10 @@ class ReportRepository extends ServiceEntityRepository
         return $query->getArrayResult();
     }
 
-    public function findIfReportIsActive($id) {
+    public function findIfReportIsActive($idBin) {
         $query = $this->createQueryBuilder('c')
-            ->where('c.id = :id AND c.status = :status')
-            ->setParameter(':id',$id)
+            ->where('c.id_bin = :id AND c.status = :status')
+            ->setParameter(':id',$idBin)
             ->setParameter(':status', 'active')
             ->getQuery();
 

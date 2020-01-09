@@ -7,12 +7,13 @@ use App\Entity\Bin;
 class ApiToulouseService
 {
 
-    public function CallApi($entityManager) :int
+    public function CallApi($entityManager,$binRepository) :int
     {
         $url = "https://data.toulouse-metropole.fr/api/records/1.0/search/?dataset=recup-verre&rows=10000";
         $raw = file_get_contents($url);
         $json = json_decode($raw,true);
         $i = 0;
+        $update = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
 
         foreach ($json["records"] as $value){
 
@@ -25,15 +26,33 @@ class ApiToulouseService
                 }else{
                     $name = "pas renseigné";
                 }
-                $bin = new Bin();
-                $bin->setCity($city);
-                $bin->setCityCode($city_code);
-                $bin->setCoords("POINT($geo)");
-                $bin->setName($name);
-                // tell Doctrine you want to (eventually) save the Product (no queries yet)
-                $entityManager->persist($bin);
+                $array = $binRepository->findOneby([
+                    "coords" => "POINT($geo)"
+                ]);
+                if ($array)
+                {
+                    $array->setCity($city);
+                    $array->setCityCode($city_code);
+                    $array->setCoords("POINT($geo)");
+                    $array->setName($name);
+                    $array->setUpdatedAt($update);
+                    // tell Doctrine you want to (eventually) save the Product (no queries yet)
+                    $entityManager->persist($array);
 
-                $i++;
+                    $i++;
+
+                }else{
+                    $bin = new Bin();
+                    $bin->setCity($city);
+                    $bin->setCityCode($city_code);
+                    $bin->setCoords("POINT($geo)");
+                    $bin->setName($name);
+                    // tell Doctrine you want to (eventually) save the Product (no queries yet)
+                    $entityManager->persist($bin);
+
+                    $i++;
+                }
+
             }
         }
 
@@ -50,15 +69,32 @@ class ApiToulouseService
                 }else{
                     $name = "pas renseigné";
                 }
-                $bin = new Bin();
-                $bin->setCity($city);
-                $bin->setCityCode($city_code);
-                $bin->setCoords("POINT($geo)");
-                $bin->setName($name);
-                // tell Doctrine you want to (eventually) save the Product (no queries yet)
-                $entityManager->persist($bin);
+                $array = $binRepository->findOneby([
+                    "coords" => "POINT($geo)"
+                ]);
+                if ($array)
+                {
+                    $array->setCity($city);
+                    $array->setCityCode($city_code);
+                    $array->setCoords("POINT($geo)");
+                    $array->setName($name);
+                    $array->setUpdatedAt($update);
+                    // tell Doctrine you want to (eventually) save the Product (no queries yet)
+                    $entityManager->persist($array);
 
-                $i++;
+                    $i++;
+
+                }else{
+                    $bin = new Bin();
+                    $bin->setCity($city);
+                    $bin->setCityCode($city_code);
+                    $bin->setCoords("POINT($geo)");
+                    $bin->setName($name);
+                    // tell Doctrine you want to (eventually) save the Product (no queries yet)
+                    $entityManager->persist($bin);
+
+                    $i++;
+                }
             }
         }
         $url3 = "http://angotbaptiste.com/test2.php";
@@ -77,16 +113,32 @@ class ApiToulouseService
                 }else{
                     $name = "pas renseigné";
                 }
-                $bin = new Bin();
-                $bin->setCity($city);
-                $bin->setCityCode($city_code);
-                $bin->setCoords("POINT($geo)");
-                $bin->setName($name);
-                // tell Doctrine you want to (eventually) save the Product (no queries yet)
-                $entityManager->persist($bin);
-                // actually executes the queries (i.e. the INSERT query)
+                $array = $binRepository->findOneby([
+                    "coords" => "POINT($geo)"
+                ]);
+                if ($array)
+                {
+                    $array->setCity($city);
+                    $array->setCityCode($city_code);
+                    $array->setCoords("POINT($geo)");
+                    $array->setName($name);
+                    $array->setUpdatedAt($update);
+                    // tell Doctrine you want to (eventually) save the Product (no queries yet)
+                    $entityManager->persist($array);
 
-                $i++;
+                    $i++;
+
+                }else{
+                    $bin = new Bin();
+                    $bin->setCity($city);
+                    $bin->setCityCode($city_code);
+                    $bin->setCoords("POINT($geo)");
+                    $bin->setName($name);
+                    // tell Doctrine you want to (eventually) save the Product (no queries yet)
+                    $entityManager->persist($bin);
+
+                    $i++;
+                }
             }
 
         }

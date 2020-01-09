@@ -53,11 +53,23 @@ class BinRepository extends ServiceEntityRepository
     public function findAllBin()
     {
         $query = $this->createQueryBuilder('b')
-            ->select('b.coords')
+            ->select('b.id','b.coords','b.name','b.city','b.city_code','b.created_at','b.updated_at')
             ->getQuery()
             ;
         return $query->getResult();
     }
+
+    public function findOnebycoords($coord,$coord1)
+    {
+        $query = $this->createQueryBuilder('b')
+            ->where('b.coords = ST_Point(:val,:val1)')
+            ->setParameter(':val',$coord)
+            ->setParameter(':val1',$coord1)
+            ->getQuery()
+            ;
+        return $query->getResult();
+    }
+
 
 
     public function findbycoord($coord,$coord2,$rayon)

@@ -86,10 +86,16 @@ class ReportRepository extends ServiceEntityRepository
         return $query->getArrayResult();
     }
 
+    public function getLastReport() {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = 'SELECT * FROM report WHERE status = "active" ORDER BY created_at DESC LIMIT 1';
+    }
+
     public function cleanReports() {
         $conn = $this->getEntityManager()->getConnection();
 
-        $sql = 'TRUNCATE TABLE consumer CASCADE';
+        $sql = 'TRUNCATE TABLE report CASCADE';
         $statement = $conn->prepare($sql);
         $statement->execute();
     }

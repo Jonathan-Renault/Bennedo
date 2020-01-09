@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Service\ConsumerActionsService;
 use App\Entity\Report;
 
 class ReportController extends AbstractController
@@ -27,12 +28,20 @@ class ReportController extends AbstractController
     public function createReport(Request $req)
     {
         $datas = json_decode($req->getContent(), true);
+        /*
+         * datas -> id_bin, id_consumer, action (confirm problem or refute problem), type (full, broken)
+         */
         var_dump($datas);
 
-        $idBin = $datas[0]['id_bin'];
+        $action = $datas[0]['action'];
+
+        $id_consumer = $datas[0]['id_consumer'];
+        $id_bin = $datas[0]['id_bin'];
         $verifReport = $this->getDoctrine()
             ->getRepository(Report::class)
-            ->findOneReport($idBin);     //verify if the report for this bin does not already exists with an active status
+            ->findOneReport($id_bin);     //verify if the report for this bin does not already exists with an active status
+
+        $entityManager = $this->getDoctrine()->getManager();
 
         if (empty($verifReport)) {
             $report = new Report();
@@ -40,11 +49,21 @@ class ReportController extends AbstractController
                 ->setType($datas[0]['type'])
                 ->setStatus('active');
 
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($report);
             $entityManager->flush();
+
+            $newReport = $this->getDoctrine()
+                ->getRepository(Report::class)
+                ->getLastReport();
+
+            $id_report = $newReport->getId;
+            $action = "report";
+        } else {
+            $id_report = $verifReport->getId;
         }
 
+        $actionService = new ConsumerActionsService();
+        $actionService->createConsumerAction($id_report, $id_bin, $id_consumer, $action, $entityManager);
 
     }
 

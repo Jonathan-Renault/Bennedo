@@ -1,7 +1,8 @@
 ###> symfony/framework-bundle ###
+.env
 /.env.local
 /.env.local.php
-/.env.*.local
+/.env.*
 /public/bundles/
 /var/
 /vendor/
@@ -167,3 +168,7 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.gitignore.io/api/linux,macos,windows,phpstorm+all
+
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###

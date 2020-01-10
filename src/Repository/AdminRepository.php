@@ -67,6 +67,15 @@ class AdminRepository extends ServiceEntityRepository
         return $query->getArrayResult();
     }
 
+    public function findAdminByLog($login)
+    {
+        $query = $this->createQueryBuilder('c')
+            ->where('c.login = :login')
+            ->setParameter(':login', $login)
+            ->getQuery();
+        return $query->getArrayResult();
+    }
+
     public function removeAdmin($id)
     {
         $query = $this->getEntityManager()->getConnection();
@@ -77,7 +86,8 @@ class AdminRepository extends ServiceEntityRepository
         $statement->execute();
     }
 
-    public function updateAdmin(Admin $admin): Admin {
+    public function updateAdmin(Admin $admin): Admin
+    {
         $this->getEntityManager()->persist($admin);
         $this->getEntityManager()->flush();
         return $admin;

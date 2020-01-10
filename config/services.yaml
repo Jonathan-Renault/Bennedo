@@ -42,8 +42,6 @@ services:
     tags:
       - { name: doctrine.event_subscriber, connection: default}
 
-  admin_authenticator:
-    class: App\Security\AdminAuthenticator
-
-  admin_provider:
-    class: App\Security\AdminProvider
+  api_key_authenticator:
+    class: App\Security\TokenAuthenticator
+    arguments: ["@Router"]

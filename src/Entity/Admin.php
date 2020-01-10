@@ -53,6 +53,8 @@ class Admin implements UserInterface
      */
     private $updated_at;
 
+    private $apiToken;
+
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\AdminHasReport", mappedBy="id_admin")
      */
@@ -71,6 +73,12 @@ class Admin implements UserInterface
     }
 
     public function GetUsername(): ?string
+    {
+        return $this->login;
+    }
+
+
+    public function getLogin()
     {
         return $this->login;
     }
@@ -175,7 +183,11 @@ class Admin implements UserInterface
 
     public function getRoles()
     {
-        return array('ROLE_ADMIN');
+        if (empty($roles)) {
+            $roles[] = 'ROLE_USER';
+        }
+
+        return array_unique($roles);
     }
 
     public function eraseCredentials()
@@ -188,5 +200,8 @@ class Admin implements UserInterface
         return null;
     }
 
+    public function setApiToken($apiToken){
+        $this->apiToken = $apiToken;
+    }
 
 }

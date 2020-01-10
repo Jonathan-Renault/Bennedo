@@ -154,6 +154,26 @@ class ReportController extends AbstractController
     }
 
     /**
+     * @Route("admin/reports/remove/{id}", name="report_remove")
+     * @param $id
+     * @return Response
+     * @throws \Exception
+     */
+    public function removeReport($id) {
+        $repository = $this->getDoctrine()->getRepository(Report::class);
+        $report = $repository->findOneBy(['id' => $id]);
+
+        $report->setStatus('abusive');
+
+        $em = $this->getDoctrine()->getManager();
+
+        $em->persist($report);
+        $em->flush();
+
+        return new Response('', Response::HTTP_OK);
+    }
+
+    /**
      * @Route("/reports/clean", name="report_clean")
      */
     public function cleanReportsTable()

@@ -92,13 +92,6 @@ class ReportRepository extends ServiceEntityRepository
         $sql = 'SELECT * FROM report WHERE status = "active" ORDER BY created_at DESC LIMIT 1';
     }
 
-    public function updateReport(Report $report): Report
-    {
-        $this->getEntityManager()->persist($report);
-        $this->getEntityManager()->flush();
-        return $report;
-    }
-
     public function cleanReports() {
         $conn = $this->getEntityManager()->getConnection();
 

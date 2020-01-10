@@ -94,7 +94,7 @@ class ReportController extends AbstractController
     }
 
     /**
-     * @Route("/reports/getsome", name="report_getsome")
+     * @Route("/reports/getactive", name="report_getactive")
      * @return Response
      */
     public function getActiveReports()
@@ -130,6 +130,27 @@ class ReportController extends AbstractController
             $response->headers->set('Content-Type', 'application/json');
             return $response;
         }
+    }
+
+    /**
+     * @Route("/reports/resolve/{id}", name="report_resolve")
+     * @param $id
+     * @return Response
+     * @throws \Exception
+     */
+    public function resolveReport($id) {
+        $repository = $this->getDoctrine()->getRepository(Report::class);
+        $report = $repository->findOneBy(['id' => $id]);
+
+        $report->setStatus('resolved')
+            ->setTimeResolved(new \DateTime('now', new \DateTimeZone('Europe/Paris')));
+
+        $em = $this->getDoctrine()->getManager();
+
+        $em->persist($report);
+        $em->flush();
+
+        return new Response('', Response::HTTP_OK);
     }
 
     /**

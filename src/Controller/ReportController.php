@@ -24,6 +24,7 @@ class ReportController extends AbstractController
     /**
      * @Route("/reports/create", name="report_create")
      * @param Request $req
+     * @return Response
      */
     public function createReport(Request $req)
     {
@@ -71,6 +72,7 @@ class ReportController extends AbstractController
         $actionService = new ConsumerActionsService();
         $actionService->createConsumerAction($id_report, $id_bin, $id_consumer, $action, $entityManager);
 
+        return new Response('', Response::HTTP_CREATED);
     }
 
     /**

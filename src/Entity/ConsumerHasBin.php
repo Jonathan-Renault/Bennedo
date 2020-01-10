@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
 /**
@@ -31,22 +33,32 @@ class ConsumerHasBin
     private $created_at;
 
     /**
+     * @ORM\Column(type="uuid")
      * @ORM\ManyToOne(targetEntity="App\Entity\Bin", inversedBy="id_bin")
      * @ORM\JoinColumn(nullable=false)
      */
     private $id_bin;
 
     /**
+     * @ORM\Column(type="uuid")
      * @ORM\ManyToOne(targetEntity="App\Entity\Consumer", inversedBy="id_consumer")
      * @ORM\JoinColumn(nullable=false)
      */
     private $id_consumer;
 
     /**
+     * @ORM\Column(type="uuid")
      * @ORM\ManyToOne(targetEntity="App\Entity\Report", inversedBy="id_consumer_has_bin")
      * @ORM\JoinColumn(nullable=false)
      */
     private $id_report;
+
+    public function __construct()
+    {
+        $this->id_consumer_has_report = new ArrayCollection();
+        $this->id = Uuid::uuid4();
+        $this->created_at = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
+    }
 
     public function getId()
     {
@@ -82,7 +94,7 @@ class ConsumerHasBin
         return $this->id_bin;
     }
 
-    public function setIdBin(?Bin $id_bin): self
+    public function setIdBin($id_bin): self
     {
         $this->id_bin = $id_bin;
 
@@ -94,7 +106,7 @@ class ConsumerHasBin
         return $this->id_consumer;
     }
 
-    public function setIdConsumer(?Consumer $id_consumer): self
+    public function setIdConsumer($id_consumer): self
     {
         $this->id_consumer = $id_consumer;
 
@@ -106,7 +118,7 @@ class ConsumerHasBin
         return $this->id_report;
     }
 
-    public function setIdReport(?Report $id_report): self
+    public function setIdReport($id_report): self
     {
         $this->id_report = $id_report;
 

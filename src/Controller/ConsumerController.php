@@ -55,7 +55,6 @@ class ConsumerController extends AbstractController
         if (empty($consumers)) {
             return new Response('Aucun élément trouvé dans la table \'consumer\'.');
         } else {
-            var_dump($consumers);
             $response = new Response(json_encode($consumers));
             $response->headers->set('Content-Type', 'application/json');
             return $response;

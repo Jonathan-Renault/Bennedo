@@ -51,14 +51,24 @@ class UpdateBinsController extends AbstractController
     {
         $datas = json_decode($req->getContent(), true);
         $array = $binRepository->findbycoord($datas[0]['a'],$datas[0]['l'],$datas[0]['r']);
-        $result = json_encode($array, true);
+
+        $coordresult = array();
+        foreach ($array as $value)
+        {
+            $coord = str_replace(array('SRID=4326;POINT(',')'),'',$value['coords']);
+            $arraycoord = explode(' ',$coord);
+            $value['Point'] = $arraycoord;
+            $coordresult[] = $value;
+        }
+
+        $result = json_encode($coordresult, true);
         return new Response(
             $result
         );
     }
 
     /**
-     * @Route("/bins/test", name="bin_getone")
+     * @Route("/bins/test", name="")
      * @return Response
      */
     public function test()

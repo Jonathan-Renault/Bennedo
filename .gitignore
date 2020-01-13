@@ -1,5 +1,6 @@
 ###> symfony/framework-bundle ###
 .env
+.env.test
 /.env.local
 /.env.local.php
 /.env.*.local
@@ -168,3 +169,11 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.gitignore.io/api/linux,macos,windows,phpstorm+all
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
+config/secrets/dev/
+phpunit.xml.dist
+tests/

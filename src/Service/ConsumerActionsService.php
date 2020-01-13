@@ -22,4 +22,8 @@ class ConsumerActionsService
         $entityManager->persist($consumerAction);
         $entityManager->flush();
     }
+
+    public function verifyReportIsResolved($id_report) {
+
+    }
 }

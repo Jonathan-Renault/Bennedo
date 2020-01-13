@@ -7,12 +7,13 @@ use App\Entity\Bin;
 class ApiToulouseService
 {
 
-    public function CallApi($entityManager,$binRepository) :int
+    public function CallApi($entityManager,$binRepository) :array
     {
         $url = "https://data.toulouse-metropole.fr/api/records/1.0/search/?dataset=recup-verre&rows=10000";
         $raw = file_get_contents($url);
         $json = json_decode($raw,true);
-        $i = 0;
+        $nbinsert = 0;
+        $nbUpdate = 0;
         $update = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
 
         foreach ($json["records"] as $value){
@@ -39,7 +40,7 @@ class ApiToulouseService
                     // tell Doctrine you want to (eventually) save the Product (no queries yet)
                     $entityManager->persist($array);
 
-                    $i++;
+                    $nbUpdate++;
 
                 }else{
                     $bin = new Bin();
@@ -50,7 +51,7 @@ class ApiToulouseService
                     // tell Doctrine you want to (eventually) save the Product (no queries yet)
                     $entityManager->persist($bin);
 
-                    $i++;
+                    $nbinsert++;
                 }
 
             }
@@ -82,7 +83,7 @@ class ApiToulouseService
                     // tell Doctrine you want to (eventually) save the Product (no queries yet)
                     $entityManager->persist($array);
 
-                    $i++;
+                    $nbUpdate++;
 
                 }else{
                     $bin = new Bin();
@@ -93,7 +94,7 @@ class ApiToulouseService
                     // tell Doctrine you want to (eventually) save the Product (no queries yet)
                     $entityManager->persist($bin);
 
-                    $i++;
+                    $nbinsert++;
                 }
             }
         }
@@ -126,7 +127,7 @@ class ApiToulouseService
                     // tell Doctrine you want to (eventually) save the Product (no queries yet)
                     $entityManager->persist($array);
 
-                    $i++;
+                    $nbUpdate++;
 
                 }else{
                     $bin = new Bin();
@@ -137,13 +138,13 @@ class ApiToulouseService
                     // tell Doctrine you want to (eventually) save the Product (no queries yet)
                     $entityManager->persist($bin);
 
-                    $i++;
+                    $nbinsert++;
                 }
             }
 
         }
         $entityManager->flush();
 
-        return $i;
+        return array($nbinsert,$nbUpdate);
     }
 }

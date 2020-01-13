@@ -23,8 +23,9 @@ class UpdateBinsController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
 
         $i = $test->CallApi($entityManager,$binRepository);
+        $total = $i[0]+$i[1];
         return new Response(
-            '<h1>Vous avez fait '.$i.' requêtes</h1>'
+            '<h1>Vous avez fait un total de '.$total.' requêtes</h1><h2>'.$i[0].' ajout</h2><h2>'.$i[1].' update</h2>'
         );
     }
 

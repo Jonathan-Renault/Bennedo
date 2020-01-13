@@ -47,4 +47,13 @@ class ConsumerHasBinRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findSomeConsumerActions($id_report) {
+        $query = $this->createQueryBuilder('c')
+            ->where('c.id_report = :id')
+            ->setParameter(':id', $id_report)
+            ->getQuery();
+
+        return $query->getArrayResult();
+    }
 }

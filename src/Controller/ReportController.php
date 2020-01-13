@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\ConsumerHasBin;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,6 +26,7 @@ class ReportController extends AbstractController
      * @Route("/reports/create", name="report_create")
      * @param Request $req
      * @return Response
+     * @throws \Exception
      */
     public function createReport(Request $req)
     {
@@ -32,7 +34,6 @@ class ReportController extends AbstractController
         /*
          * datas -> id_bin, id_consumer, action (report problem, confirm problem or refute problem), type (full, broken)
          */
-        var_dump($datas);
 
         $action = $datas[0]['action'];
 
@@ -71,6 +72,13 @@ class ReportController extends AbstractController
 
         $actionService = new ConsumerActionsService();
         $actionService->createConsumerAction($id_report, $id_bin, $id_consumer, $action, $entityManager);
+
+        $repositoryConsumerActions = $this->getDoctrine()->getRepository(ConsumerHasBin::class);
+
+        $isResolved = $actionService->verifyReportIsResolved($id_report, $repositoryConsumerActions);
+
+        if ($isResolved)
+            $this->resolveReport($id_report);
 
         return new Response('', Response::HTTP_CREATED);
     }
@@ -133,7 +141,7 @@ class ReportController extends AbstractController
     }
 
     /**
-     * @Route("/reports/resolve/{id}", name="report_resolve")
+     * @Route("admin/reports/resolve/{id}", name="report_resolve")
      * @param $id
      * @return Response
      * @throws \Exception

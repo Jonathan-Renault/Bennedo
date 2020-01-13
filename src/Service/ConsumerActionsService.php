@@ -4,9 +4,6 @@
 namespace App\Service;
 
 use App\Entity\ConsumerHasBin;
-use App\Entity\Consumer;
-use App\Entity\Bin;
-use App\Entity\Report;
 
 
 class ConsumerActionsService
@@ -23,7 +20,25 @@ class ConsumerActionsService
         $entityManager->flush();
     }
 
-    public function verifyReportIsResolved($id_report) {
+    public function verifyReportIsResolved($id_report, $repository): bool {
+        $reports = $repository->findSomeConsumerActions($id_report);
+        $reports = json_encode($reports);
+        $reports = json_decode($reports, true);
+        $validateProblemCount = 0;
+        $refuteProblemCount = 0;
+
+        foreach ($reports as $report) {
+            if ($report['action'] == 'validate')
+                $validateProblemCount++;
+        }
+
+        if($validateProblemCount == 7)
+            return true;
+        else
+            return false;
+    }
+
+    public function resolveReport($id_report, $repository) {
 
     }
 }

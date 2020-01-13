@@ -87,9 +87,12 @@ class ReportRepository extends ServiceEntityRepository
     }
 
     public function getLastReport() {
-        $conn = $this->getEntityManager()->getConnection();
+        $query = $this->createQueryBuilder('c')
+            ->orderBy('c.created_at', 'DESC')
+            ->setMaxResults(10)
+            ->getQuery();
 
-        $sql = 'SELECT * FROM report WHERE status = "active" ORDER BY created_at DESC LIMIT 1';
+        return $query->getArrayResult();
     }
 
     public function cleanReports() {

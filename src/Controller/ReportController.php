@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Service\ConsumerActionsService;
+use App\Service\ActionsService;
 use App\Entity\Report;
 
 class ReportController extends AbstractController
@@ -66,11 +66,12 @@ class ReportController extends AbstractController
             $newReport = json_decode($newReport, true);
 
             $id_report = $newReport[0]['id'];
+            $action = 'report';
         } else {
             $id_report = $verifReport[0]['id'];
         }
 
-        $actionService = new ConsumerActionsService();
+        $actionService = new ActionsService();
         $actionService->createConsumerAction($id_report, $id_bin, $id_consumer, $action, $entityManager);
 
         $repositoryConsumerActions = $this->getDoctrine()->getRepository(ConsumerHasBin::class);
@@ -158,6 +159,9 @@ class ReportController extends AbstractController
         $em->persist($report);
         $em->flush();
 
+        $actionService = new ActionsService();
+        /*$actionService->createAdminAction($id);*/
+
         return new Response('', Response::HTTP_OK);
     }
 
@@ -177,6 +181,9 @@ class ReportController extends AbstractController
 
         $em->persist($report);
         $em->flush();
+
+        $actionService = new ActionsService();
+        /*$actionService->createAdminAction($id);*/
 
         return new Response('', Response::HTTP_OK);
     }

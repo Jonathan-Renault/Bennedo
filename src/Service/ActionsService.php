@@ -3,10 +3,11 @@
 
 namespace App\Service;
 
+use App\Entity\AdminHasReport;
 use App\Entity\ConsumerHasBin;
 
 
-class ConsumerActionsService
+class ActionsService
 {
     public function createConsumerAction($id_report, $id_bin, $id_consumer, $action, $entityManager)
     {
@@ -20,25 +21,29 @@ class ConsumerActionsService
         $entityManager->flush();
     }
 
+    public function createAdminAction($id_report, $id_admin, $entityManager) {
+        $adminAction = new AdminHasReport();
+        $adminAction->setIdReport($id_report)
+            ->setIdAdmin($id_admin);
+
+        $entityManager->persist($adminAction);
+        $entityManager->flush();
+    }
+
     public function verifyReportIsResolved($id_report, $repository): bool {
         $reports = $repository->findSomeConsumerActions($id_report);
         $reports = json_encode($reports);
         $reports = json_decode($reports, true);
-        $validateProblemCount = 0;
         $refuteProblemCount = 0;
 
         foreach ($reports as $report) {
-            if ($report['action'] == 'validate')
-                $validateProblemCount++;
+            if ($report['action'] == 'refute')
+                $refuteProblemCount++;
         }
 
-        if($validateProblemCount == 7)
+        if($refuteProblemCount == 7)
             return true;
         else
             return false;
-    }
-
-    public function resolveReport($id_report, $repository) {
-
     }
 }

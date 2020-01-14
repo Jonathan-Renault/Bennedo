@@ -36,12 +36,7 @@ class Consumer
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $device;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $navigator;
+    private $check_info;
 
     /**
      * @ORM\Column(type="datetime")
@@ -89,26 +84,14 @@ class Consumer
         return $this;
     }
 
-    public function getDevice(): ?string
+    public function getCheckInfo()
     {
-        return $this->device;
+        return $this->check_info;
     }
 
-    public function setDevice(string $device): self
+    public function setCheckInfo($check_info): self
     {
-        $this->device = $device;
-
-        return $this;
-    }
-
-    public function getNavigator(): ?string
-    {
-        return $this->navigator;
-    }
-
-    public function setNavigator(string $navigator): self
-    {
-        $this->navigator = $navigator;
+        $this->check_info = $check_info;
 
         return $this;
     }

@@ -1,7 +1,6 @@
 doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
-
         types:
             geography:
                 class: 'Jsor\Doctrine\PostGIS\Types\GeographyType'
@@ -20,6 +19,16 @@ doctrine:
         auto_generate_proxy_classes: true
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
         auto_mapping: true
+
+        dql:
+            string_functions:
+                Geography: Jsor\Doctrine\PostGIS\Functions\Geography
+                ST_DWITHIN: Jsor\Doctrine\PostGIS\Functions\ST_DWithin
+                ST_Point: Jsor\Doctrine\PostGIS\Functions\ST_Point
+                ST_SetSRID: Jsor\Doctrine\PostGIS\Functions\ST_SetSRID
+                ST_Transform: Jsor\Doctrine\PostGIS\Functions\ST_Transform
+                ST_GeographyFromText: Jsor\Doctrine\PostGIS\Functions\ST_GeographyFromText
+
         mappings:
             App:
                 is_bundle: false

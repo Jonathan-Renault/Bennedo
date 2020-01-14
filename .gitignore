@@ -1,5 +1,6 @@
 ###> symfony/framework-bundle ###
 .env
+.env.test
 /.env.local
 /.env.local.php
 /.env.*
@@ -169,6 +170,14 @@ $RECYCLE.BIN/
 
 # End of https://www.gitignore.io/api/linux,macos,windows,phpstorm+all
 
+
 ###> lexik/jwt-authentication-bundle ###
 /config/jwt/*.pem
-###< lexik/jwt-authentication-bundle ###
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
+config/secrets/dev/
+phpunit.xml.dist
+tests/
+

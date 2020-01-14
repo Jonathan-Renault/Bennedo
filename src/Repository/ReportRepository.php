@@ -41,42 +41,61 @@ class ReportRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    private function findVisibleQuery(): QueryBuilder
-    {
-        return $this->createQueryBuilder('p')
-            ->where('p.sold = false');
-    }
 
-    public function findAllReport()
-    {
+
+    public function findAllReports() {
         $query = $this->createQueryBuilder('c')
             ->where('1 = 1')
-            ->orderBy('c.created_at', 'DESC')
+            ->orderBy('c.created_at','DESC')
             ->getQuery();
-        return $query->getArrayResult();
 
+        return $query->getArrayResult();
     }
 
+    public function findActiveReports() {
+        $query = $this->createQueryBuilder('c')
+            ->where('c.status = :status')
+            ->setParameter(':status', "active")
+            ->orderBy('c.created_at','ASC')
+            ->getQuery();
 
-    public function findReport($id)
-    {
+        return $query->getArrayResult();
+    }
+
+    public function findOneReport($id) {
         $query = $this->createQueryBuilder('c')
             ->where('c.id = :id')
-            ->set(':id', $id)
+            ->setParameter(':id',$id)
             ->getQuery();
-        return $query->getArrayResult();
 
+        return $query->getArrayResult();
     }
 
-    public function removeReport($id)
-    {
-        $query = $this->getEntityManager()->getConnection();
+    public function findIfReportIsActive($idBin) {
+        $query = $this->createQueryBuilder('c')
+            ->where('c.id_bin = :id AND c.status = :status')
+            ->setParameter(':id',$idBin)
+            ->setParameter(':status', 'active')
+            ->getQuery();
 
-        $sql = "DELETE FROM report where id='" . $id . "'";
+        return $query->getArrayResult();
+    }
 
-        $statement = $query->prepare($sql);
+    public function getLastReport() {
+        $query = $this->createQueryBuilder('c')
+            ->orderBy('c.created_at', 'DESC')
+            ->setMaxResults(10)
+            ->getQuery();
+
+        return $query->getArrayResult();
+    }
+
+    public function cleanReports() {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = 'TRUNCATE TABLE report CASCADE';
+        $statement = $conn->prepare($sql);
         $statement->execute();
     }
-
-
 }
+

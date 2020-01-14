@@ -24,6 +24,11 @@ class Report
     private $id;
 
     /**
+     * @ORM\Column(type="uuid")
+     */
+    private $id_bin;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\ConsumerHasBin", mappedBy="id_report")
      */
     private $id_consumer_has_bin;
@@ -69,6 +74,19 @@ class Report
     public function getId()
     {
         return $this->id;
+    }
+
+
+    public function getIdBin()
+    {
+        return $this->id_bin;
+    }
+
+    public function setIdBin($id_bin): self
+    {
+        $this->id_bin = $id_bin;
+
+        return $this;
     }
 
     /**

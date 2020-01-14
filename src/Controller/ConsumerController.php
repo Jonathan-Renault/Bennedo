@@ -11,7 +11,7 @@ use App\Entity\Consumer;
 class ConsumerController extends AbstractController
 {
     /**
-     * @Route("/consumers/test", name="consumer_test")
+     * @Route("/consumers/test", name="consumer_test", methods={"GET"})
      */
     public function index()
     {
@@ -21,7 +21,7 @@ class ConsumerController extends AbstractController
     }
 
     /**
-     * @Route("/consumers/create", name="consumer_create")
+     * @Route("/consumers/create", name="consumer_create", methods={"POST"})
      * @param Request $req
      * @return Response
      */
@@ -42,7 +42,7 @@ class ConsumerController extends AbstractController
     }
 
     /**
-     * @Route("/consumers/getall", name="consumer_getall")
+     * @Route("/consumers/getall", name="consumer_getall", methods={"GET"})
      */
     public function getAllConsumers()
     {
@@ -60,7 +60,7 @@ class ConsumerController extends AbstractController
     }
 
     /**
-     * @Route("/consumers/getsome/{ip}", name="consumer_getsome")
+     * @Route("/consumers/getsome/{ip}", name="consumer_getsome", methods={"GET"})
      * @param $ip
      * @return Response
      */
@@ -80,7 +80,7 @@ class ConsumerController extends AbstractController
     }
 
     /**
-     * @Route("admin/consumers/clean", name="consumer_clean")
+     * @Route("admin/consumers/clean", name="consumer_clean", methods={"DELETE"})
      */
     public function cleanConsumersTable()
     {

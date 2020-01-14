@@ -15,7 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 class UpdateBinsController extends AbstractController
 {
     /**
-     * @Route("/bins/update", name="bins_update")
+     * @Route("/bins/update", name="bins_update", methods={"POST"})
      */
     public function update(BinRepository $binRepository)
     {
@@ -31,7 +31,7 @@ class UpdateBinsController extends AbstractController
 
 
     /**
-     * @Route("/bins/getall", name="bins_getall")
+     * @Route("/bins/getall", name="bins_getall", methods={"GET"})
      */
     public function getall(BinRepository $binRepository)
     {
@@ -44,7 +44,7 @@ class UpdateBinsController extends AbstractController
 
 
     /**
-     * @Route("/bins/getone", name="bin_getone")
+     * @Route("/bins/getone", name="bin_getone", methods={"GET"})
      * @param Request $req
      * @return Response
      */
@@ -69,7 +69,7 @@ class UpdateBinsController extends AbstractController
     }
 
     /**
-     * @Route("/bins/test", name="")
+     * @Route("/bins/test", name="", methods={"GET"})
      * @return Response
      */
     public function test()

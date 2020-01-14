@@ -35,24 +35,24 @@ class AdminController extends AbstractController
 
     public function addAdmin(Request $request): JsonResponse
     {
-        if ($this->denyAccessUnlessGranted('ROLE_ADMIN')) {
-            return new JsonResponse(['status' => 'access denied.']);
-        } else {
+//        if ($this->denyAccessUnlessGranted('ROLE_ADMIN')) {
+//            return new JsonResponse(['status' => 'access denied.']);
+//        } else {
             $datas = json_decode($request->getContent(), true);
             var_dump($datas);
             $admin = new Admin();
             $admin
-                ->setLogin($datas['login'])
-                ->setPassword(password_hash($datas['password'], PASSWORD_BCRYPT))
-                ->setRole($datas['role'])
-                ->setToken($datas['token']);
+                ->setLogin($datas[0]['login'])
+                ->setPassword(password_hash($datas[0]['password'], PASSWORD_BCRYPT))
+                ->setRole($datas[0]['role'])
+                ->setToken($datas[0]['token']);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($admin);
             $em->flush();
             return new JsonResponse(['status' => 'Administrator created.'], Response::HTTP_CREATED);
         }
-    }
+//    }
 
     /**
      * @Route("/admin/all", name="admin.all", methods={"GET"})
@@ -73,7 +73,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/admin/{id}", name="admin.one", methods={"GET"})
+     * @Route("/admin/getone/{id}", name="admin.one", methods={"GET"})
      * @param $id
      * @return Response
      */

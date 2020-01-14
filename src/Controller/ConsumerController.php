@@ -31,10 +31,8 @@ class ConsumerController extends AbstractController
 
         $consumer = new Consumer();
         $consumer->setCoords($datas[0]['coords'])
-            ->setIpAddress($datas[0]['ip_address'])
-            ->setIdClosestBin($datas[0]['id_closest_bin'])
-            ->setDevice($datas[0]['device'])
-            ->setNavigator($datas[0]['navigator']);
+            ->setCheckInfo($datas[0]['check_info'])
+            ->setIdClosestBin($datas[0]['id_closest_bin']);
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($consumer);
@@ -82,7 +80,7 @@ class ConsumerController extends AbstractController
     }
 
     /**
-     * @Route("/consumers/clean", name="consumer_clean")
+     * @Route("admin/consumers/clean", name="consumer_clean")
      */
     public function cleanConsumersTable()
     {

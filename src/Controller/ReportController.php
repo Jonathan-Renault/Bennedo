@@ -189,7 +189,7 @@ class ReportController extends AbstractController
     }
 
     /**
-     * @Route("/reports/clean", name="report_clean")
+     * @Route("admin/reports/clean", name="report_clean")
      */
     public function cleanReportsTable()
     {

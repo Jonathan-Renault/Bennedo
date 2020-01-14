@@ -13,6 +13,7 @@ use App\Entity\Report;
 class ReportController extends AbstractController
 {
     /**
+
      * @Route("/reports/test", name="report_test")
      */
     public function index()
@@ -122,6 +123,7 @@ class ReportController extends AbstractController
     }
 
     /**
+
      * @Route("/reports/getone/{id}", name="report_getone")
      * @param $id
      * @return Response

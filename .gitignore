@@ -3,7 +3,7 @@
 .env.test
 /.env.local
 /.env.local.php
-/.env.*.local
+/.env.*
 /public/bundles/
 /var/
 /vendor/
@@ -170,6 +170,9 @@ $RECYCLE.BIN/
 
 # End of https://www.gitignore.io/api/linux,macos,windows,phpstorm+all
 
+
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
 ###> phpunit/phpunit ###
 /phpunit.xml
 .phpunit.result.cache
@@ -177,3 +180,4 @@ $RECYCLE.BIN/
 config/secrets/dev/
 phpunit.xml.dist
 tests/
+

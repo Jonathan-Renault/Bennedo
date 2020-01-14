@@ -1,0 +1,46 @@
+security:
+  encoders:
+    App\Entity\Admin:
+      algorithm: bcrypt
+      cost: 13
+
+  providers:
+#    admin:
+#     entity: { class: App\Entity\Admin, property: login}
+    api_key_user_providers:
+      entity: { class: App\Entity\Admin, property: login}
+
+  firewalls:
+
+    main:
+      anonymous: ~
+      logout: ~
+      guard:
+        authenticators:
+          - App\Security\TokenAuthenticator
+    login:
+      pattern:  /auth
+      stateless: true
+      anonymous: true
+      json_login:
+        check_path:               /auth
+        failure_handler:          lexik_jwt_authentication.handler.authentication_failure
+
+    api:
+      pattern:   ^/api
+      stateless: true
+      guard:
+        authenticators:
+          - lexik_jwt_authentication.jwt_token_authenticator
+
+
+    # activate different ways to authenticate
+    # https://symfony.com/doc/current/security.html#firewalls-authentication
+
+    # https://symfony.com/doc/current/security/impersonating_user.html
+    # switch_user: true
+
+  # Easy way to control access for large sections of your site
+  # Note: Only the *first* access control that matches will be used
+  access_control:
+    - {path: '^/admin', roles: [IS_AUTHENTICATED_FULLY, ROLE_ADMIN]}

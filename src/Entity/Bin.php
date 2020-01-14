@@ -6,7 +6,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\UuidInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BinRepository")
@@ -14,7 +13,7 @@ use Ramsey\Uuid\UuidInterface;
 class Bin
 {
     /**
-     * @var UuidInterface
+     * @var Uuid
      *
      * @ORM\Id
      * @ORM\Column(type="uuid", unique=true)

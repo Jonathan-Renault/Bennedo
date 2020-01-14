@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Report;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * @method Report|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,34 +20,28 @@ class ReportRepository extends ServiceEntityRepository
         parent::__construct($registry, Report::class);
     }
 
-    // /**
-    //  * @return Report[] Returns an array of Report objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return Report[]
+     */
+    public function findAllVisible(): array
     {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('r.id', 'ASC')
-            ->setMaxResults(10)
+        return $this->findVisibleQuery()
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Report
+    /**
+     * @return Report[]
+     */
+    public function findLatest(): array
     {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
+        return $this->findVisibleQuery()
+            ->setMaxResults(4)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getResult();
     }
-    */
+
+
 
     public function findAllReports() {
         $query = $this->createQueryBuilder('c')
@@ -103,3 +98,4 @@ class ReportRepository extends ServiceEntityRepository
         $statement->execute();
     }
 }
+

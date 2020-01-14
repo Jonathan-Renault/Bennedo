@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20191203151717 extends AbstractMigration
+final class Version20200109094247 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -30,9 +30,9 @@ final class Version20191203151717 extends AbstractMigration
         $this->addSql('COMMENT ON COLUMN admin_has_report.id IS \'(DC2Type:uuid)\'');
         $this->addSql('COMMENT ON COLUMN admin_has_report.id_report_id IS \'(DC2Type:uuid)\'');
         $this->addSql('COMMENT ON COLUMN admin_has_report.id_admin_id IS \'(DC2Type:uuid)\'');
-        $this->addSql('CREATE TABLE bin (id UUID NOT NULL, coords geography(POINT, 4326) NOT NULL, city VARCHAR(255) NOT NULL, city_code INT NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE bin (id UUID NOT NULL, name VARCHAR(255) NOT NULL, coords geography(POINT, 4326) NOT NULL, city VARCHAR(255) NOT NULL, city_code INT NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('COMMENT ON COLUMN bin.id IS \'(DC2Type:uuid)\'');
-        $this->addSql('CREATE TABLE consumer (id UUID NOT NULL, coords geography(POINT, 4326) DEFAULT NULL, id_closest_bin UUID NOT NULL, device VARCHAR(255) NOT NULL, navigator VARCHAR(255) NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE consumer (id UUID NOT NULL, coords geography(POINT, 4326) DEFAULT NULL, ip_address VARCHAR(255) NOT NULL, id_closest_bin UUID NOT NULL, device VARCHAR(255) NOT NULL, navigator VARCHAR(255) NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
         $this->addSql('COMMENT ON COLUMN consumer.id IS \'(DC2Type:uuid)\'');
         $this->addSql('COMMENT ON COLUMN consumer.id_closest_bin IS \'(DC2Type:uuid)\'');
         $this->addSql('CREATE TABLE consumer_has_bin (id UUID NOT NULL, id_bin_id UUID NOT NULL, id_consumer_id UUID NOT NULL, id_report_id UUID NOT NULL, action VARCHAR(255) NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
@@ -58,7 +58,6 @@ final class Version20191203151717 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql('CREATE SCHEMA public');
-        $this->addSql('CREATE SCHEMA topology');
         $this->addSql('ALTER TABLE admin_has_report DROP CONSTRAINT FK_2033C69A34F06E85');
         $this->addSql('ALTER TABLE consumer_has_bin DROP CONSTRAINT FK_EB430E024123331');
         $this->addSql('ALTER TABLE consumer_has_bin DROP CONSTRAINT FK_EB430E022FEF709A');

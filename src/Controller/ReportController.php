@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\ConsumerHasBin;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,6 +13,16 @@ use App\Entity\Report;
 
 class ReportController extends AbstractController
 {
+    /**
+     * @var ObjectManager
+     */
+    private $em;
+
+    public function __construct(ObjectManager $em)
+    {
+        $this->em = $em;
+    }
+
     /**
 
      * @Route("/reports/test", name="report_test")

@@ -47,4 +47,59 @@ class ReportRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findAllReports() {
+        $query = $this->createQueryBuilder('c')
+            ->where('1 = 1')
+            ->orderBy('c.created_at','DESC')
+            ->getQuery();
+
+        return $query->getArrayResult();
+    }
+
+    public function findActiveReports() {
+        $query = $this->createQueryBuilder('c')
+            ->where('c.status = :status')
+            ->setParameter(':status', "active")
+            ->orderBy('c.created_at','ASC')
+            ->getQuery();
+
+        return $query->getArrayResult();
+    }
+
+    public function findOneReport($id) {
+        $query = $this->createQueryBuilder('c')
+            ->where('c.id = :id')
+            ->setParameter(':id',$id)
+            ->getQuery();
+
+        return $query->getArrayResult();
+    }
+
+    public function findIfReportIsActive($idBin) {
+        $query = $this->createQueryBuilder('c')
+            ->where('c.id_bin = :id AND c.status = :status')
+            ->setParameter(':id',$idBin)
+            ->setParameter(':status', 'active')
+            ->getQuery();
+
+        return $query->getArrayResult();
+    }
+
+    public function getLastReport() {
+        $query = $this->createQueryBuilder('c')
+            ->orderBy('c.created_at', 'DESC')
+            ->setMaxResults(10)
+            ->getQuery();
+
+        return $query->getArrayResult();
+    }
+
+    public function cleanReports() {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = 'TRUNCATE TABLE report CASCADE';
+        $statement = $conn->prepare($sql);
+        $statement->execute();
+    }
 }

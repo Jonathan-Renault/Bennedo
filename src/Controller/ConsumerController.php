@@ -16,8 +16,7 @@ class ConsumerController extends AbstractController
     public function index()
     {
         return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/ConsumerController.php',
+            'message' => 'La route de test des connexions utilisateurs est fonctionnelle !'
         ]);
     }
 
@@ -29,14 +28,11 @@ class ConsumerController extends AbstractController
     public function createConsumer(Request $req)
     {
         $datas = json_decode($req->getContent(), true);
-        var_dump($datas);
 
         $consumer = new Consumer();
         $consumer->setCoords($datas[0]['coords'])
-            ->setIpAddress($datas[0]['ip_address'])
-            ->setIdClosestBin($datas[0]['id_closest_bin'])
-            ->setDevice($datas[0]['device'])
-            ->setNavigator($datas[0]['navigator']);
+            ->setCheckInfo($datas[0]['check_info'])
+            ->setIdClosestBin($datas[0]['id_closest_bin']);
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($consumer);
@@ -84,7 +80,7 @@ class ConsumerController extends AbstractController
     }
 
     /**
-     * @Route("/consumers/clean", name="consumer_clean")
+     * @Route("admin/consumers/clean", name="consumer_clean")
      */
     public function cleanConsumersTable()
     {

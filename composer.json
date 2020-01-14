@@ -5,7 +5,11 @@
     "php": "^7.2.5",
     "ext-ctype": "*",
     "ext-iconv": "*",
+    "ext-json": "*",
+    "jms/serializer-bundle": "^3.5",
+
     "jsor/doctrine-postgis": "^1.7",
+    "phpunit/phpunit": "^8.5",
     "ramsey/uuid-doctrine": "^1.5",
     "sensio/framework-extra-bundle": "^5.5",
     "symfony/console": "5.0.*",

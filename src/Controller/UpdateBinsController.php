@@ -36,10 +36,22 @@ class UpdateBinsController extends AbstractController
     public function getall(BinRepository $binRepository)
     {
         $array = $binRepository->findAllBin();
-        $result = json_encode($array, true);
-        return new Response(
+        $coordresult = array();
+
+        foreach ($array as $value)
+        {
+            $coord = str_replace(array('SRID=4326;POINT(',')'),'',$value['coords']);
+            $arraycoord = explode(' ',$coord);
+            $value['Point'] = $arraycoord;
+            $coordresult[] = $value;
+        }
+        $result = json_encode($coordresult, true);
+        $response = new Response(
             $result
         );
+        $response->headers->set('Access-Control-Allow-Origin','*');
+        $response->headers->set('Content-Type','application/json');
+        return $response;
     }
 
 
@@ -51,7 +63,7 @@ class UpdateBinsController extends AbstractController
     public function getone(BinRepository $binRepository,\Symfony\Component\HttpFoundation\Request $req)
     {
         $datas = json_decode($req->getContent(), true);
-        $array = $binRepository->findbycoord($datas[0]['a'],$datas[0]['l'],$datas[0]['r']);
+        $array = $binRepository->findbycoord($datas[0]['long'],$datas[0]['lat'],$datas[0]['radius']);
 
         $coordresult = array();
         foreach ($array as $value)

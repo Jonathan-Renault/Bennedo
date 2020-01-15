@@ -55,6 +55,7 @@ class ConsumerController extends AbstractController
         } else {
             $response = new Response(json_encode($consumers));
             $response->headers->set('Content-Type', 'application/json');
+            $response->headers->set('Access-Control-Allow-Origin','*');
             return $response;
         }
     }
@@ -75,6 +76,7 @@ class ConsumerController extends AbstractController
         } else {
             $response = new Response(json_encode($consumers));
             $response->headers->set('Content-Type', 'application/json');
+            $response->headers->set('Access-Control-Allow-Origin','*');
             return $response;
         }
     }
@@ -91,9 +93,6 @@ class ConsumerController extends AbstractController
         if(!$consumers) {
             return new Response("Le traitement n'a pas pu être effectué car la table est vide.");
         } else {
-            /*
-             * Code d'archivage de la table (ainsi que les tables contenant des clés étrangères) à écrire
-             */
 
             $this->getDoctrine()->getRepository(Consumer::class)->cleanConsumers();
 

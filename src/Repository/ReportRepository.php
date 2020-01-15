@@ -84,7 +84,7 @@ class ReportRepository extends ServiceEntityRepository
     public function getLastReport() {
         $query = $this->createQueryBuilder('c')
             ->orderBy('c.created_at', 'DESC')
-            ->setMaxResults(10)
+            ->setMaxResults(1)
             ->getQuery();
 
         return $query->getArrayResult();

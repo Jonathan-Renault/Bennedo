@@ -43,9 +43,6 @@ class ReportController extends AbstractController
     public function createReport(Request $req)
     {
         $datas = json_decode($req->getContent(), true);
-        /*
-         * datas -> id_bin, id_consumer, action (report problem, confirm problem or refute problem), type (full, broken)
-         */
 
         $action = $datas[0]['action'];
 
@@ -110,6 +107,7 @@ class ReportController extends AbstractController
         } else {
             $response = new Response(json_encode($reports));
             $response->headers->set('Content-Type', 'application/json');
+            $response->headers->set('Access-Control-Allow-Origin','*');
             return $response;
         }
     }
@@ -129,6 +127,7 @@ class ReportController extends AbstractController
         } else {
             $response = new Response(json_encode($reports));
             $response->headers->set('Content-Type', 'application/json');
+            $response->headers->set('Access-Control-Allow-Origin','*');
             return $response;
         }
     }
@@ -150,6 +149,7 @@ class ReportController extends AbstractController
         } else {
             $response = new Response(json_encode($reports));
             $response->headers->set('Content-Type', 'application/json');
+            $response->headers->set('Access-Control-Allow-Origin','*');
             return $response;
         }
     }
@@ -179,7 +179,7 @@ class ReportController extends AbstractController
     }
 
     /**
-     * @Route("admin/reports/remove/{id}", name="report_remove", methods={"DELETE"})
+     * @Route("admin/reports/remove/{id}", name="report_remove", methods={"POST"})
      * @param $id
      * @return Response
      * @throws \Exception
@@ -213,9 +213,6 @@ class ReportController extends AbstractController
         if(!$consumers) {
             return new Response("Le traitement n'a pas pu être effectué car la table est vide.");
         } else {
-            /*
-             * Code d'archivage de la table (ainsi que les tables contenant des clés étrangères) à écrire
-             */
 
             $this->getDoctrine()->getRepository(Report::class)->cleanReports();
 

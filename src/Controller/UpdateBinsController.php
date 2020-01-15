@@ -37,9 +37,12 @@ class UpdateBinsController extends AbstractController
     {
         $array = $binRepository->findAllBin();
         $result = json_encode($array, true);
-        return new Response(
+        $response = new Response(
             $result
         );
+        $response->headers->set('Content-type', 'application/json');
+        $response->headers->set('Access-Control-Allow-Origin','*');
+        return $response;
     }
 
 
@@ -51,7 +54,7 @@ class UpdateBinsController extends AbstractController
     public function getone(BinRepository $binRepository,\Symfony\Component\HttpFoundation\Request $req)
     {
         $datas = json_decode($req->getContent(), true);
-        $array = $binRepository->findbycoord($datas[0]['a'],$datas[0]['l'],$datas[0]['r']);
+        $array = $binRepository->findbycoord($datas[0]['long'],$datas[0]['latt'],$datas[0]['radius']);
 
         $coordresult = array();
         foreach ($array as $value)
@@ -63,31 +66,11 @@ class UpdateBinsController extends AbstractController
         }
 
         $result = json_encode($coordresult, true);
-        return new Response(
+        $response = new Response(
             $result
         );
-    }
-
-    /**
-     * @Route("/bins/test", name="", methods={"GET"})
-     * @return Response
-     */
-    public function test()
-    {
-        $array = $this->getDoctrine()->getRepository(Bin::class)->findOneby([
-            "coords" => "POINT(1.37795899947 43.6662139954)"
-        ]);
-
-        if (!$array)
-        {
-            $result = "noob";
-
-        }else{
-            $test[] = $array->getCoords();
-            $result = json_encode($test, true);
-        }
-        return new Response(
-            $result
-        );
+        $response->headers->set('Content-type', 'application/json');
+        $response->headers->set('Access-Control-Allow-Origin','*');
+        return $response;
     }
 }

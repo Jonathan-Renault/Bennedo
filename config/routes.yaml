@@ -1,4 +1,4 @@
 logout:
   path: /logout
 api_login_check:
-  path: /auth
+  path: /api/login_check

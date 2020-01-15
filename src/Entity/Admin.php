@@ -72,13 +72,17 @@ class Admin implements UserInterface
         return $this->id;
     }
 
-    public function GetUsername(): ?string
+    /**
+     * @return string
+     * @see UserInterface
+     */
+    public function GetUsername(): string
     {
-        return $this->login;
+        return (string)$this->login;
     }
 
 
-    public function getLogin()
+    public function getLogin(): ?string
     {
         return $this->login;
     }
@@ -181,10 +185,14 @@ class Admin implements UserInterface
         return $this;
     }
 
+    /**
+     * @return array|string[]
+     * @see UserInterface
+     */
     public function getRoles()
     {
         if (empty($roles)) {
-            $roles[] = 'ROLE_USER';
+            $roles[] = 'ROLE_ADMIN';
         }
 
         return array_unique($roles);
@@ -200,7 +208,8 @@ class Admin implements UserInterface
         return null;
     }
 
-    public function setApiToken($apiToken){
+    public function setApiToken($apiToken)
+    {
         $this->apiToken = $apiToken;
     }
 

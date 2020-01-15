@@ -15,7 +15,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 class UpdateBinsController extends AbstractController
 {
     /**
-     * @Route("/bins/update", name="bins_update", methods={"POST"})
+     * @Route("/bins/update", name="bins_update", methods={"PUT"})
+     * @param BinRepository $binRepository
+     * @return Response
      */
     public function update(BinRepository $binRepository)
     {

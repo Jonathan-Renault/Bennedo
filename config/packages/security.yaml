@@ -1,29 +1,19 @@
 security:
+  providers:
+    users:
+      entity:
+        class: 'App\Entity\Admin'
   encoders:
     App\Entity\Admin:
-      algorithm: bcrypt
-      cost: 13
-
-  providers:
-#    admin:
-#     entity: { class: App\Entity\Admin, property: login}
-    api_key_user_providers:
-      entity: { class: App\Entity\Admin, property: login}
-
+      algorithm: auto
   firewalls:
-
-    main:
-      anonymous: ~
-      logout: ~
-      guard:
-        authenticators:
-          - App\Security\TokenAuthenticator
     login:
-      pattern:  /auth
+      pattern: ^/api/login
       stateless: true
       anonymous: true
       json_login:
-        check_path:               /auth
+        check_path:               /api/login_check
+        success_handler:          lexik_jwt_authentication.handler.authentication_success
         failure_handler:          lexik_jwt_authentication.handler.authentication_failure
 
     api:
@@ -32,15 +22,13 @@ security:
       guard:
         authenticators:
           - lexik_jwt_authentication.jwt_token_authenticator
-
-
-    # activate different ways to authenticate
-    # https://symfony.com/doc/current/security.html#firewalls-authentication
-
-    # https://symfony.com/doc/current/security/impersonating_user.html
-    # switch_user: true
-
-  # Easy way to control access for large sections of your site
-  # Note: Only the *first* access control that matches will be used
+      #    classic:
+      #      anonymous: ~
+      #      guard:
+      #        authenticators:
+      #          - App\Security\AuthTokenUserProvider
+      logout:
+        path: app_logout
   access_control:
-#    - {path: '^/admin', roles: [IS_AUTHENTICATED_FULLY, ROLE_ADMIN]}
+    - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }

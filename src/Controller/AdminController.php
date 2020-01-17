@@ -39,7 +39,6 @@ class AdminController extends AbstractController
 //            return new JsonResponse(['status' => 'access denied.']);
 //        } else {
             $datas = json_decode($request->getContent(), true);
-            var_dump($datas);
             $admin = new Admin();
             $admin
                 ->setLogin($datas[0]['login'])
@@ -68,6 +67,7 @@ class AdminController extends AbstractController
         } else {
             $response = new Response(json_encode($admin));
             $response->headers->set('Content-type', 'application/json');
+            $response->headers->set('Access-Control-Allow-Origin','*');
             return $response;
         }
     }
@@ -89,6 +89,7 @@ class AdminController extends AbstractController
         } else {
             $res = new Response(json_encode($admin));
             $res->headers->set('Content-type', 'application/json');
+            $res->headers->set('Access-Control-Allow-Origin','*');
             return $res;
         }
 
@@ -110,28 +111,6 @@ class AdminController extends AbstractController
         } else {
             $this->getDoctrine()->getRepository(Admin::class)->removeAdmin($id);
             return new Response("Administrator successfully deleted.");
-        }
-
-    }
-
-    /**
-     * @Route("/admin/remove-report/{id}", name="admin.remove.report", methods={"DELETE"})
-     * @param $id
-     * @return Response
-     */
-
-    public function moveReport($id)
-    {
-        $report = $this->getDoctrine()
-            ->getRepository(Report::class)
-            ->findReport($id);
-
-        if (!$report) {
-            return new Response("Processing cannot be performed because no element has been found.");
-
-        } else {
-            $this->getDoctrine()->getRepository(Report::class)->removeReport($id);
-            return new Response("Report successfully deleted");
         }
     }
 

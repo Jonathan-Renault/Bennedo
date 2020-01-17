@@ -47,11 +47,17 @@ Création de la base de données / Create Database
 php bin/console doctrine:database:create
 ```
 
-Cliques droit sur pgadmin/Database/Nom_BDD/extension, create> postgis
+Dans pgadmin, cliques droit sur pgadmin/Database/Nom_BDD/extension, create> postgis
 
 Création de la migration / Make migration
 ```
 php bin/console make:migration
+php bin/console doctrine:migrations:migrate
+```
+
+Lancer serveur / Run server
+```
+php -s localhost:8000 -t public
 ```
 
 ## Built With

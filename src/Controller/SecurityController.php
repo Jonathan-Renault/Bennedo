@@ -6,26 +6,38 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 
 class SecurityController extends AbstractController
 {
-
     /**
-     * @Route(name="login", path="/api/login_check")
+     * @Route(name="index", path="/api/login_check")
      * @return JsonResponse
      */
-
-    public function login(): JsonResponse
+    public function index(): JsonResponse
     {
         $user = $this->getUser();
-
-        return new JsonResponse([
+        return new Response([
             'username' => $user->getUsername(),
-            'roles' => $user->getRoles()
+            'roles' => $user->getRoles(),
         ]);
+    }
+
+    /**
+     * @Route("/login", name="app_login")
+     * @param AuthenticationUtils $authenticationUtils
+     * @return JsonResponse
+     */
+    public function login(AuthenticationUtils $authenticationUtils)
+    {
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+        return new JsonResponse(['last_username' => $lastUsername, 'error' => $error]);
     }
 
 
@@ -36,6 +48,8 @@ class SecurityController extends AbstractController
     {
 
     }
+
+
 
 
 

@@ -24,7 +24,7 @@ class Admin implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $login;
 
@@ -73,10 +73,9 @@ class Admin implements UserInterface
     }
 
     /**
-     * @return string
      * @see UserInterface
      */
-    public function GetUsername(): string
+    public function getUsername(): string
     {
         return (string)$this->login;
     }
@@ -94,6 +93,9 @@ class Admin implements UserInterface
         return $this;
     }
 
+    /**
+     * @see UserInterface
+     */
     public function getPassword(): ?string
     {
         return $this->password;
@@ -200,14 +202,21 @@ class Admin implements UserInterface
 
     public function eraseCredentials()
     {
-
+        return null;
     }
 
+    /**
+     * @see UserInterface
+     */
     public function getSalt()
     {
         return null;
     }
 
+    /**
+     * @param $apiToken
+     * @see UserInterface
+     */
     public function setApiToken($apiToken)
     {
         $this->apiToken = $apiToken;

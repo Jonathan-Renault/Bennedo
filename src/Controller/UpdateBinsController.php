@@ -58,15 +58,15 @@ class UpdateBinsController extends AbstractController
 
 
     /**
-     * @Route("/bins/getone", name="bin_getone", methods={"GET"})
+     * @Route("/bins/getone/{long}/{lat}/{radius}", name="bin_getone", methods={"GET"})
      * @param Request $req
      * @return Response
      */
-    public function getone(BinRepository $binRepository,\Symfony\Component\HttpFoundation\Request $req)
+    public function getone(BinRepository $binRepository,$long,$lat,$radius,\Symfony\Component\HttpFoundation\Request $req)
     {
-        $datas = json_decode($req->getContent(), true);
-
-        $array = $binRepository->findbycoord($datas[0]['long'],$datas[0]['lat'],$datas[0]['radius']);
+        $long = str_replace('I','.',$long);
+        $lat = str_replace('I','.',$lat);
+        $array = $binRepository->findbycoord($long,$lat,$radius);
 
         $coordresult = array();
         foreach ($array as $value)

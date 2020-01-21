@@ -85,4 +85,33 @@ class UpdateBinsController extends AbstractController
         $response->headers->set('Access-Control-Allow-Origin','*');
         return $response;
     }
+
+    /**
+     * @Route("/bins/getonedistance/{long}/{lat}/{radius}", name="bin_getonedistance", methods={"GET"})
+     * @param Request $req
+     * @return Response
+     */
+    public function getonedistance(BinRepository $binRepository,$long,$lat,$radius,\Symfony\Component\HttpFoundation\Request $req)
+    {
+        $long = str_replace('I','.',$long);
+        $lat = str_replace('I','.',$lat);
+        $array = $binRepository->findbyDistance($long,$lat,$radius);
+
+        $coordresult = array();
+        foreach ($array as $value)
+        {
+            $coord = str_replace(array('SRID=4326;POINT(',')'),'',$value['coords']);
+            $arraycoord = explode(' ',$coord);
+            $value['Point'] = $arraycoord;
+            $coordresult[] = $value;
+        }
+
+        $result = json_encode($coordresult, true);
+        $response = new Response(
+            $result
+        );
+        $response->headers->set('Content-type', 'application/json');
+        $response->headers->set('Access-Control-Allow-Origin','*');
+        return $response;
+    }
 }

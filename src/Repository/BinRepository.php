@@ -85,6 +85,21 @@ class BinRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
+    public function findbyDistance($coord,$coord2,$rayon)
+    {
+        $query = $this->createQueryBuilder('b')
+            ->where('ST_DWithin(b.coords, Geography(ST_SetSRID(ST_Point(:val,:val2),4326)), :val3) = true')
+            ->orderBy('ST_Distance(b.coords,ST_Point(:val,:val2))','ASC')
+            ->setMaxResults(1)
+            ->setParameter(':val', $coord)
+            ->setParameter(':val2', $coord2)
+            ->setParameter(':val3',$rayon)
+            ->select('b.id','b.coords','b.name','b.city','b.city_code','b.created_at','b.updated_at')
+            ->getQuery()
+        ;
+        return $query->getResult();
+    }
+
 
 
 

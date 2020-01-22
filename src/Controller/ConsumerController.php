@@ -61,6 +61,25 @@ class ConsumerController extends AbstractController
     }
 
     /**
+     * @Route("/consumers/getlast", name="consumer_getlast", methods={"GET"})
+     */
+    public function getLastConsumer()
+    {
+        $consumers = $this->getDoctrine()
+            ->getRepository(Consumer::class)
+            ->getLastConsumer();
+
+        if (empty($consumers)) {
+            return new Response('Aucun élément trouvé dans la table \'consumer\'.');
+        } else {
+            $response = new Response(json_encode($consumers));
+            $response->headers->set('Content-Type', 'application/json');
+            $response->headers->set('Access-Control-Allow-Origin','*');
+            return $response;
+        }
+    }
+
+    /**
      * @Route("/consumers/getsome/{ip}", name="consumer_getsome", methods={"GET"})
      * @param $ip
      * @return Response

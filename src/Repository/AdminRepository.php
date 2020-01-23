@@ -5,6 +5,9 @@ namespace App\Repository;
 use App\Entity\Admin;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 
 /**
  * @method Admin|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,6 +17,10 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  */
 class AdminRepository extends ServiceEntityRepository
 {
+    /**
+     * AdminRepository constructor.
+     * @param ManagerRegistry $registry
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Admin::class);
@@ -47,7 +54,9 @@ class AdminRepository extends ServiceEntityRepository
         ;
     }
     */
-
+    /**
+     * @return array
+     */
     public function findAllAdmin()
     {
         $query = $this->createQueryBuilder('c')
@@ -58,6 +67,10 @@ class AdminRepository extends ServiceEntityRepository
         return $query->getArrayResult();
     }
 
+    /**
+     * @param $id
+     * @return array
+     */
     public function findAdmin($id)
     {
         $query = $this->createQueryBuilder('c')
@@ -67,6 +80,10 @@ class AdminRepository extends ServiceEntityRepository
         return $query->getArrayResult();
     }
 
+    /**
+     * @param $login
+     * @return array
+     */
     public function findAdminByLog($login)
     {
         $query = $this->createQueryBuilder('c')
@@ -76,6 +93,10 @@ class AdminRepository extends ServiceEntityRepository
         return $query->getArrayResult();
     }
 
+    /**
+     * @param $id
+     * @throws DBALException
+     */
     public function removeAdmin($id)
     {
         $query = $this->getEntityManager()->getConnection();
@@ -86,6 +107,12 @@ class AdminRepository extends ServiceEntityRepository
         $statement->execute();
     }
 
+    /**
+     * @param Admin $admin
+     * @return Admin
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     public function updateAdmin(Admin $admin): Admin
     {
         $this->getEntityManager()->persist($admin);

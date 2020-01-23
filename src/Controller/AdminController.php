@@ -6,6 +6,10 @@ namespace App\Controller;
 use App\Entity\Admin;
 use App\Entity\Report;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,37 +32,39 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/admin/create", name="admin.create", methods={"POST"})
+     * @Route("/api/admin/create", name="admin.create", methods={"POST"})
+     * @IsGranted("ROLE_ADMIN")
      * @param Request $request
      * @return JsonResponse
      */
 
     public function addAdmin(Request $request): JsonResponse
     {
-//        if ($this->denyAccessUnlessGranted('ROLE_ADMIN')) {
-//            return new JsonResponse(['status' => 'access denied.']);
-//        } else {
-            $datas = json_decode($request->getContent(), true);
-            $admin = new Admin();
-            $admin
-                ->setLogin($datas[0]['login'])
-                ->setPassword(password_hash($datas[0]['password'], PASSWORD_BCRYPT))
-                ->setRole($datas[0]['role'])
-                ->setToken($datas[0]['token']);
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($admin);
-            $em->flush();
-            return new JsonResponse(['status' => 'Administrator created.'], Response::HTTP_CREATED);
-        }
-//    }
+        $datas = json_decode($request->getContent(), true);
+        $admin = new Admin();
+        $admin
+            ->setLogin($datas[0]['login'])
+            ->setPassword(password_hash($datas[0]['password'], PASSWORD_BCRYPT))
+            ->setRole($datas[0]['role'])
+            ->setToken($datas[0]['token']);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($admin);
+        $em->flush();
+        return new JsonResponse(['status' => 'Administrator created.'], Response::HTTP_CREATED);
+    }
+
+
 
     /**
-     * @Route("/admin/all", name="admin.all", methods={"GET"})
+     * @Route("/api/admin/all", name="admin.all", methods={"GET"})
+     * @IsGranted("ROLE_ADMIN")
      * @return Response
      */
     public function allAdmin()
     {
+
         $admin = $this->getDoctrine()
             ->getRepository(Admin::class)
             ->findAllAdmin();
@@ -70,10 +76,11 @@ class AdminController extends AbstractController
             $response->headers->set('Access-Control-Allow-Origin','*');
             return $response;
         }
+
     }
 
     /**
-     * @Route("/admin/getone/{id}", name="admin.one", methods={"GET"})
+     * @Route("/api/admin/getone/{id}", name="admin.one", methods={"GET"})
      * @param $id
      * @return Response
      */
@@ -96,9 +103,10 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/admin/remove-admin/{id}", name="admin.remove.admin", methods={"DELETE"})
+     * @Route("/api/admin/remove-admin/{id}", name="admin.remove.admin", methods={"DELETE"})
      * @param $id
      * @return Response
+     * @throws DBALException
      */
     public function removeAdmin($id)
     {
@@ -112,13 +120,39 @@ class AdminController extends AbstractController
             $this->getDoctrine()->getRepository(Admin::class)->removeAdmin($id);
             return new Response("Administrator successfully deleted.");
         }
+
+
     }
 
     /**
-     * @Route("/admin/update/{id}", name="admin.update", methods={"PUT"})
+     * @Route("/api/admin/remove-report/{id}", name="admin.remove.report", methods={"DELETE"})
+     * @param $id
+     * @return Response
+     */
+
+    public function moveReport($id)
+    {
+        $report = $this->getDoctrine()
+            ->getRepository(Report::class)
+            ->findReport($id);
+
+        if (!$report) {
+            return new Response("Processing cannot be performed because no element has been found.");
+
+        } else {
+            $this->getDoctrine()->getRepository(Report::class)->removeReport($id);
+            return new Response("Report successfully deleted");
+        }
+
+    }
+
+    /**
+     * @Route("/api/admin/update/{id}", name="admin.update", methods={"PUT"})
      * @param $id
      * @param Request $request
      * @return JsonResponse
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
 
     public function updateAdmin($id, Request $request): JsonResponse

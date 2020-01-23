@@ -12,26 +12,29 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Jsor\Doctrine\PostGIS\Functions\ST_ClosestPoint;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+
 class UpdateBinsController extends AbstractController
 {
     /**
-     * @Route("/bins/update", name="bins_update", methods={"POST"})
+     * @Route("/api/bins/update", name="bins_update", methods={"POST"})
+     * @param BinRepository $binRepository
+     * @return Response
      */
     public function update(BinRepository $binRepository)
     {
         $test = new ApiToulouseService();
         $entityManager = $this->getDoctrine()->getManager();
 
-        $i = $test->CallApi($entityManager,$binRepository);
-        $total = $i[0]+$i[1];
+        $i = $test->CallApi($entityManager, $binRepository);
+        $total = $i[0] + $i[1];
         return new Response(
-            '<h1>Vous avez fait un total de '.$total.' requêtes</h1><h2>'.$i[0].' ajout</h2><h2>'.$i[1].' update</h2>'
+            '<h1>Vous avez fait un total de ' . $total . ' requêtes</h1><h2>' . $i[0] . ' ajout</h2><h2>' . $i[1] . ' update</h2>'
         );
     }
 
 
     /**
-     * @Route("/bins/getall", name="bins_getall", methods={"GET"})
+     * @Route("/api/bins/getall", name="bins_getall", methods={"GET"})
      */
     public function getall(BinRepository $binRepository)
     {
@@ -56,8 +59,6 @@ class UpdateBinsController extends AbstractController
         return $response;
     }
 
-
-    /**
      * @Route("/bins/getone/{long}/{lat}/{radius}", name="bin_getone", methods={"GET"})
      * @param Request $req
      * @return Response
@@ -67,12 +68,10 @@ class UpdateBinsController extends AbstractController
         $long = str_replace('I','.',$long);
         $lat = str_replace('I','.',$lat);
         $array = $binRepository->findbycoord($long,$lat,$radius);
-
         $coordresult = array();
-        foreach ($array as $value)
-        {
-            $coord = str_replace(array('SRID=4326;POINT(',')'),'',$value['coords']);
-            $arraycoord = explode(' ',$coord);
+        foreach ($array as $value) {
+            $coord = str_replace(array('SRID=4326;POINT(', ')'), '', $value['coords']);
+            $arraycoord = explode(' ', $coord);
             $value['Point'] = $arraycoord;
             $coordresult[] = $value;
         }

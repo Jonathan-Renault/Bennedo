@@ -24,16 +24,6 @@ class ReportController extends AbstractController
         $this->em = $em;
     }
 
-    /**
-
-     * @Route("/reports/test", name="report_test", methods={"GET"})
-     */
-    public function index()
-    {
-        return $this->json([
-            'message' => 'La route de test des signalements est fonctionnelle !'
-        ]);
-    }
 
     /**
      * @Route("/reports/create", name="report_create", methods={"POST"})
@@ -95,7 +85,7 @@ class ReportController extends AbstractController
     }
 
     /**
-     * @Route("/reports/getall", name="report_getall", methods={"GET"})
+     * @Route("/api/reports/getall", name="report_getall", methods={"GET"})
      */
     public function getAllReports()
     {
@@ -134,7 +124,7 @@ class ReportController extends AbstractController
     }
 
     /**
-     * @Route("/reports/getone/{id}", name="report_getone", methods={"GET"})
+     * @Route("/api/reports/getone/{id}", name="report_getone", methods={"GET"})
      * @param $id
      * @return Response
      */
@@ -176,7 +166,7 @@ class ReportController extends AbstractController
     }
 
     /**
-     * @Route("admin/reports/resolve/{id}", name="report_resolve", methods={"POST"})
+     * @Route("/api/admin/reports/resolve/{id}", name="report_resolve", methods={"POST"})
      * @param $id
      * @return Response
      * @throws \Exception
@@ -200,7 +190,7 @@ class ReportController extends AbstractController
     }
 
     /**
-     * @Route("admin/reports/remove/{id}", name="report_remove", methods={"POST"})
+     * @Route("/api/admin/reports/remove/{id}", name="report_remove", methods={"DELETE"})
      * @param $id
      * @return Response
      * @throws \Exception
@@ -223,7 +213,7 @@ class ReportController extends AbstractController
     }
 
     /**
-     * @Route("admin/reports/clean", name="report_clean", methods={"DELETE"})
+     * @Route("/api/admin/reports/clean", name="report_clean", methods={"DELETE"})
      */
     public function cleanReportsTable()
     {

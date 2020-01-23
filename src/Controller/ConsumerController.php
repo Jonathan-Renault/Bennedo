@@ -12,15 +12,6 @@ use function GuzzleHttp\json_encode;
 
 class ConsumerController extends AbstractController
 {
-    /**
-     * @Route("/consumers/test", name="consumer_test", methods={"GET"})
-     */
-    public function index()
-    {
-        return $this->json([
-            'message' => 'La route de test des connexions utilisateurs est fonctionnelle !'
-        ]);
-    }
 
     /**
      * @Route("/consumers/create", name="consumer_create", methods={"POST"})
@@ -63,7 +54,7 @@ class ConsumerController extends AbstractController
     }
 
     /**
-     * @Route("/consumers/getall", name="consumer_getall", methods={"GET"})
+     * @Route("/api/consumers/getall", name="consumer_getall", methods={"GET"})
      */
     public function getAllConsumers()
     {
@@ -101,7 +92,7 @@ class ConsumerController extends AbstractController
     }
 
     /**
-     * @Route("/consumers/getsome/{ip}", name="consumer_getsome", methods={"GET"})
+     * @Route("/api/consumers/getsome/{ip}", name="consumer_getsome", methods={"GET"})
      * @param $ip
      * @return Response
      */
@@ -122,7 +113,7 @@ class ConsumerController extends AbstractController
     }
 
     /**
-     * @Route("admin/consumers/clean", name="consumer_clean", methods={"DELETE"})
+     * @Route("/api/admin/consumers/clean", name="consumer_clean", methods={"DELETE"})
      */
     public function cleanConsumersTable()
     {

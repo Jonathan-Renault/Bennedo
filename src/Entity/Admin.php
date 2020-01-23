@@ -24,7 +24,7 @@ class Admin implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $login;
 
@@ -72,13 +72,16 @@ class Admin implements UserInterface
         return $this->id;
     }
 
-    public function GetUsername(): ?string
+    /**
+     * @see UserInterface
+     */
+    public function getUsername(): string
     {
-        return $this->login;
+        return (string)$this->login;
     }
 
 
-    public function getLogin()
+    public function getLogin(): ?string
     {
         return $this->login;
     }
@@ -90,6 +93,9 @@ class Admin implements UserInterface
         return $this;
     }
 
+    /**
+     * @see UserInterface
+     */
     public function getPassword(): ?string
     {
         return $this->password;
@@ -181,10 +187,14 @@ class Admin implements UserInterface
         return $this;
     }
 
+    /**
+     * @return array|string[]
+     * @see UserInterface
+     */
     public function getRoles()
     {
         if (empty($roles)) {
-            $roles[] = 'ROLE_USER';
+            $roles[] = 'ROLE_ADMIN';
         }
 
         return array_unique($roles);
@@ -192,15 +202,23 @@ class Admin implements UserInterface
 
     public function eraseCredentials()
     {
-
+        return null;
     }
 
+    /**
+     * @see UserInterface
+     */
     public function getSalt()
     {
         return null;
     }
 
-    public function setApiToken($apiToken){
+    /**
+     * @param $apiToken
+     * @see UserInterface
+     */
+    public function setApiToken($apiToken)
+    {
         $this->apiToken = $apiToken;
     }
 

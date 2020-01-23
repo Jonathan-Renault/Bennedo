@@ -43,7 +43,7 @@ security:
     - { path: ^/api/login_check, roles: IS_AUTHENTICATED_ANONYMOUSLY}
     - { path: ^/admin/*, roles: [IS_AUTHENTICATED_FULLY, ROLE_ADMIN]}
     - { path: ^/reports/*, roles: [IS_AUTHENTICATED_FULLY, ROLE_ADMIN]}
-    - { path: ^/bins/*, roles: [IS_AUTHENTICATED_FULLY, ROLE_ADMIN]}
+#    - { path: ^/bins/*, roles: [IS_AUTHENTICATED_FULLY, ROLE_ADMIN]}
 
   role_hierarchy:
     ROLE_ADMIN:       ROLE_USER

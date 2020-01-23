@@ -42,10 +42,9 @@ class UpdateBinsController extends AbstractController
 
         $coordresult = array();
 
-        foreach ($array as $value)
-        {
-            $coord = str_replace(array('SRID=4326;POINT(',')'),'',$value['coords']);
-            $arraycoord = explode(' ',$coord);
+        foreach ($array as $value) {
+            $coord = str_replace(array('SRID=4326;POINT(', ')'), '', $value['coords']);
+            $arraycoord = explode(' ', $coord);
             $value['Point'] = $arraycoord;
             $coordresult[] = $value;
         }
@@ -53,21 +52,22 @@ class UpdateBinsController extends AbstractController
         $response = new Response(
             $result
         );
-        $response->headers->set('Access-Control-Allow-Origin','*');
-        $response->headers->set('Content-Type','application/json');
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+        $response->headers->set('Content-Type', 'application/json');
 
         return $response;
     }
 
+    /**
      * @Route("/bins/getone/{long}/{lat}/{radius}", name="bin_getone", methods={"GET"})
      * @param Request $req
      * @return Response
      */
-    public function getone(BinRepository $binRepository,$long,$lat,$radius,\Symfony\Component\HttpFoundation\Request $req)
+    public function getone(BinRepository $binRepository, $long, $lat, $radius, \Symfony\Component\HttpFoundation\Request $req)
     {
-        $long = str_replace('I','.',$long);
-        $lat = str_replace('I','.',$lat);
-        $array = $binRepository->findbycoord($long,$lat,$radius);
+        $long = str_replace('I', '.', $long);
+        $lat = str_replace('I', '.', $lat);
+        $array = $binRepository->findbycoord($long, $lat, $radius);
         $coordresult = array();
         foreach ($array as $value) {
             $coord = str_replace(array('SRID=4326;POINT(', ')'), '', $value['coords']);
@@ -81,7 +81,7 @@ class UpdateBinsController extends AbstractController
             $result
         );
         $response->headers->set('Content-type', 'application/json');
-        $response->headers->set('Access-Control-Allow-Origin','*');
+        $response->headers->set('Access-Control-Allow-Origin', '*');
         return $response;
     }
 
@@ -90,17 +90,16 @@ class UpdateBinsController extends AbstractController
      * @param Request $req
      * @return Response
      */
-    public function getonedistance(BinRepository $binRepository,$long,$lat,$radius,\Symfony\Component\HttpFoundation\Request $req)
+    public function getonedistance(BinRepository $binRepository, $long, $lat, $radius, \Symfony\Component\HttpFoundation\Request $req)
     {
-        $long = str_replace('I','.',$long);
-        $lat = str_replace('I','.',$lat);
-        $array = $binRepository->findbyDistance($long,$lat,$radius);
+        $long = str_replace('I', '.', $long);
+        $lat = str_replace('I', '.', $lat);
+        $array = $binRepository->findbyDistance($long, $lat, $radius);
 
         $coordresult = array();
-        foreach ($array as $value)
-        {
-            $coord = str_replace(array('SRID=4326;POINT(',')'),'',$value['coords']);
-            $arraycoord = explode(' ',$coord);
+        foreach ($array as $value) {
+            $coord = str_replace(array('SRID=4326;POINT(', ')'), '', $value['coords']);
+            $arraycoord = explode(' ', $coord);
             $value['Point'] = $arraycoord;
             $coordresult[] = $value;
         }
@@ -110,7 +109,7 @@ class UpdateBinsController extends AbstractController
             $result
         );
         $response->headers->set('Content-type', 'application/json');
-        $response->headers->set('Access-Control-Allow-Origin','*');
+        $response->headers->set('Access-Control-Allow-Origin', '*');
         return $response;
     }
 }

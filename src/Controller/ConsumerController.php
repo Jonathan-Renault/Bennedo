@@ -2,11 +2,13 @@
 
 namespace App\Controller;
 
+use App\Repository\ConsumerRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Consumer;
+use function GuzzleHttp\json_encode;
 
 class ConsumerController extends AbstractController
 {
@@ -25,20 +27,34 @@ class ConsumerController extends AbstractController
      * @param Request $req
      * @return Response
      */
-    public function createConsumer(Request $req)
+    public function createConsumer(Request $req,ConsumerRepository $consumerRepository)
     {
+        $result = array();
+
         $datas = json_decode($req->getContent(), true);
 
-        $consumer = new Consumer();
-        $consumer->setCoords($datas[0]['coords'])
-            ->setCheckInfo($datas[0]['check_info'])
-            ->setIdClosestBin($datas[0]['id_closest_bin']);
+        $checkConsumer = $consumerRepository->findOneBy([
+           'check_info' =>  $datas[0]['check_info']
+        ]);
+        if (!$checkConsumer)
+        {
+            $consumer = new Consumer();
+            $consumer->setCoords('POINT('.$datas[0]['coords'].')');
+            $consumer->setCheckInfo($datas[0]['check_info']);
+            $consumer->setIdClosestBin($datas[0]['id_closest_bin']);
 
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($consumer);
-        $entityManager->flush();
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($consumer);
+            $entityManager->flush();
 
-        return new Response('', Response::HTTP_CREATED);
+            $result['success'] = $consumer->getId();
+        }else{
+            $result['error'] = $checkConsumer->getId();
+        }
+
+        $result = json_encode($result);
+
+        return new Response($result, Response::HTTP_CREATED);
     }
 
     /**

@@ -76,6 +76,15 @@ class ConsumerRepository extends ServiceEntityRepository
         return $query->getArrayResult();
     }
 
+    public function getLastConsumer() {
+        $query = $this->createQueryBuilder('c')
+            ->orderBy('c.created_at', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery();
+
+        return $query->getArrayResult();
+    }
+
     public function cleanConsumers() {
         $conn = $this->getEntityManager()->getConnection();
 

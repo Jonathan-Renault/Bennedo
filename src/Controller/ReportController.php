@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\AdminHasReport;
 use App\Entity\ConsumerHasBin;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Request;
@@ -133,7 +134,6 @@ class ReportController extends AbstractController
     }
 
     /**
-
      * @Route("/reports/getone/{id}", name="report_getone", methods={"GET"})
      * @param $id
      * @return Response
@@ -148,6 +148,27 @@ class ReportController extends AbstractController
             return new Response('Aucun élément trouvé à cet ID dans la table \'report\'.');
         } else {
             $response = new Response(json_encode($reports));
+            $response->headers->set('Content-Type', 'application/json');
+            $response->headers->set('Access-Control-Allow-Origin','*');
+            return $response;
+        }
+    }
+
+    /**
+     * @Route("/reports/gethistory/{id}", name="report_gethistory", methods={"GET"})
+     * @param $id
+     * @return Response
+     */
+    public function getHistory($id)
+    {
+        $history = $this->getDoctrine()
+            ->getRepository(ConsumerHasBin::class)
+            ->findSomeConsumerActions($id);
+
+        if (empty($history)) {
+            return new Response('Aucun élément trouvé dans l\'historique des actions utilisateurs sur ce report');
+        } else {
+            $response = new Response(json_encode($history));
             $response->headers->set('Content-Type', 'application/json');
             $response->headers->set('Access-Control-Allow-Origin','*');
             return $response;

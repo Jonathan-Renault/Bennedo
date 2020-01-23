@@ -56,6 +56,7 @@ class AdminController extends AbstractController
     }
 
 
+
     /**
      * @Route("/api/admin/all", name="admin.all", methods={"GET"})
      * @IsGranted("ROLE_ADMIN")
@@ -72,6 +73,7 @@ class AdminController extends AbstractController
         } else {
             $response = new Response(json_encode($admin));
             $response->headers->set('Content-type', 'application/json');
+            $response->headers->set('Access-Control-Allow-Origin','*');
             return $response;
         }
 
@@ -94,6 +96,7 @@ class AdminController extends AbstractController
         } else {
             $res = new Response(json_encode($admin));
             $res->headers->set('Content-type', 'application/json');
+            $res->headers->set('Access-Control-Allow-Origin','*');
             return $res;
         }
 
@@ -118,6 +121,7 @@ class AdminController extends AbstractController
             return new Response("Administrator successfully deleted.");
         }
 
+
     }
 
     /**
@@ -139,6 +143,7 @@ class AdminController extends AbstractController
             $this->getDoctrine()->getRepository(Report::class)->removeReport($id);
             return new Response("Report successfully deleted");
         }
+
     }
 
     /**

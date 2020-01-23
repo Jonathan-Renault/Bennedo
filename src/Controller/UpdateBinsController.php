@@ -39,24 +39,35 @@ class UpdateBinsController extends AbstractController
     public function getall(BinRepository $binRepository)
     {
         $array = $binRepository->findAllBin();
-        $result = json_encode($array, true);
-        return new Response(
+
+        $coordresult = array();
+
+        foreach ($array as $value)
+        {
+            $coord = str_replace(array('SRID=4326;POINT(',')'),'',$value['coords']);
+            $arraycoord = explode(' ',$coord);
+            $value['Point'] = $arraycoord;
+            $coordresult[] = $value;
+        }
+        $result = json_encode($coordresult, true);
+        $response = new Response(
             $result
         );
+        $response->headers->set('Access-Control-Allow-Origin','*');
+        $response->headers->set('Content-Type','application/json');
+
+        return $response;
     }
 
-
-    /**
-     * @Route("/api/bins/getone", name="bin_getone", methods={"GET"})
-     * @param BinRepository $binRepository
-     * @param \Symfony\Component\HttpFoundation\Request $req
+     * @Route("/bins/getone/{long}/{lat}/{radius}", name="bin_getone", methods={"GET"})
+     * @param Request $req
      * @return Response
      */
-    public function getone(BinRepository $binRepository, \Symfony\Component\HttpFoundation\Request $req)
+    public function getone(BinRepository $binRepository,$long,$lat,$radius,\Symfony\Component\HttpFoundation\Request $req)
     {
-        $datas = json_decode($req->getContent(), true);
-        $array = $binRepository->findbycoord($datas[0]['a'], $datas[0]['l'], $datas[0]['r']);
-
+        $long = str_replace('I','.',$long);
+        $lat = str_replace('I','.',$lat);
+        $array = $binRepository->findbycoord($long,$lat,$radius);
         $coordresult = array();
         foreach ($array as $value) {
             $coord = str_replace(array('SRID=4326;POINT(', ')'), '', $value['coords']);
@@ -66,8 +77,40 @@ class UpdateBinsController extends AbstractController
         }
 
         $result = json_encode($coordresult, true);
-        return new Response(
+        $response = new Response(
             $result
         );
+        $response->headers->set('Content-type', 'application/json');
+        $response->headers->set('Access-Control-Allow-Origin','*');
+        return $response;
+    }
+
+    /**
+     * @Route("/bins/getonedistance/{long}/{lat}/{radius}", name="bin_getonedistance", methods={"GET"})
+     * @param Request $req
+     * @return Response
+     */
+    public function getonedistance(BinRepository $binRepository,$long,$lat,$radius,\Symfony\Component\HttpFoundation\Request $req)
+    {
+        $long = str_replace('I','.',$long);
+        $lat = str_replace('I','.',$lat);
+        $array = $binRepository->findbyDistance($long,$lat,$radius);
+
+        $coordresult = array();
+        foreach ($array as $value)
+        {
+            $coord = str_replace(array('SRID=4326;POINT(',')'),'',$value['coords']);
+            $arraycoord = explode(' ',$coord);
+            $value['Point'] = $arraycoord;
+            $coordresult[] = $value;
+        }
+
+        $result = json_encode($coordresult, true);
+        $response = new Response(
+            $result
+        );
+        $response->headers->set('Content-type', 'application/json');
+        $response->headers->set('Access-Control-Allow-Origin','*');
+        return $response;
     }
 }

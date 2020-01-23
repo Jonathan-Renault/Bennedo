@@ -28,6 +28,8 @@ doctrine:
                 ST_SetSRID: Jsor\Doctrine\PostGIS\Functions\ST_SetSRID
                 ST_Transform: Jsor\Doctrine\PostGIS\Functions\ST_Transform
                 ST_GeographyFromText: Jsor\Doctrine\PostGIS\Functions\ST_GeographyFromText
+                ST_GeogFromText: Jsor\Doctrine\PostGIS\Functions\ST_GeogFromText
+                ST_Distance: Jsor\Doctrine\PostGIS\Functions\ST_Distance
 
         mappings:
             App:

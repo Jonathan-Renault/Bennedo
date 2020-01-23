@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\AdminHasReport;
 use App\Entity\ConsumerHasBin;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,9 +34,6 @@ class ReportController extends AbstractController
     public function createReport(Request $req)
     {
         $datas = json_decode($req->getContent(), true);
-        /*
-         * datas -> id_bin, id_consumer, action (report problem, confirm problem or refute problem), type (full, broken)
-         */
 
         $action = $datas[0]['action'];
 
@@ -100,6 +98,7 @@ class ReportController extends AbstractController
         } else {
             $response = new Response(json_encode($reports));
             $response->headers->set('Content-Type', 'application/json');
+            $response->headers->set('Access-Control-Allow-Origin','*');
             return $response;
         }
     }
@@ -119,12 +118,12 @@ class ReportController extends AbstractController
         } else {
             $response = new Response(json_encode($reports));
             $response->headers->set('Content-Type', 'application/json');
+            $response->headers->set('Access-Control-Allow-Origin','*');
             return $response;
         }
     }
 
     /**
-
      * @Route("/api/reports/getone/{id}", name="report_getone", methods={"GET"})
      * @param $id
      * @return Response
@@ -140,6 +139,28 @@ class ReportController extends AbstractController
         } else {
             $response = new Response(json_encode($reports));
             $response->headers->set('Content-Type', 'application/json');
+            $response->headers->set('Access-Control-Allow-Origin','*');
+            return $response;
+        }
+    }
+
+    /**
+     * @Route("/reports/gethistory/{id}", name="report_gethistory", methods={"GET"})
+     * @param $id
+     * @return Response
+     */
+    public function getHistory($id)
+    {
+        $history = $this->getDoctrine()
+            ->getRepository(ConsumerHasBin::class)
+            ->findSomeConsumerActions($id);
+
+        if (empty($history)) {
+            return new Response('Aucun élément trouvé dans l\'historique des actions utilisateurs sur ce report');
+        } else {
+            $response = new Response(json_encode($history));
+            $response->headers->set('Content-Type', 'application/json');
+            $response->headers->set('Access-Control-Allow-Origin','*');
             return $response;
         }
     }
@@ -203,9 +224,6 @@ class ReportController extends AbstractController
         if(!$consumers) {
             return new Response("Le traitement n'a pas pu être effectué car la table est vide.");
         } else {
-            /*
-             * Code d'archivage de la table (ainsi que les tables contenant des clés étrangères) à écrire
-             */
 
             $this->getDoctrine()->getRepository(Report::class)->cleanReports();
 

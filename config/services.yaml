@@ -42,6 +42,6 @@ services:
     tags:
       - { name: doctrine.event_subscriber, connection: default}
 
-  api_key_authenticator:
-    class: App\Security\TokenAuthenticator
-    arguments: ["@Router"]
+  login_authenticator:
+    class: App\Security\LoginAuthenticator
+    autowire: true

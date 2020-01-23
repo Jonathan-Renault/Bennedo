@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,74 +28,39 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/login", name="app_login")
+     * @Route("/api/login", name="app_login")
      * @param AuthenticationUtils $authenticationUtils
-     * @return JsonResponse
+     * @return Response
      */
-    public function login(AuthenticationUtils $authenticationUtils)
+    public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        // get the login error if there is one
-        $error = $authenticationUtils->getLastAuthenticationError();
-        // last username entered by the user
+        $err = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
-        return new JsonResponse(['last_username' => $lastUsername, 'error' => $error]);
+
+        return new JsonResponse(['last_username' => $lastUsername, 'error' => $err]);
+
     }
 
+    /**
+     * @Route("/api/profile", name="api_profile")
+     * @IsGranted("ROLE_ADMIN")
+     * @return JsonResponse
+     */
+    public function profile()
+    {
+        return $this->json([
+            'user' => $this->getUser()
+        ], 200, [], [
+            'groups' => ['api']
+        ]);
+    }
 
     /**
-     * @Route("/logout", name="logout", methods={"GET"})
+     * @return JsonResponse
      */
     public function logout()
     {
-
+        return $this->json(['result' => true]);
     }
-
-
-
-
-
-//    /**
-//     * @Route("/auth", name="auth")
-//     * @param Request $request
-//     * @return JsonResponse
-//     */
-//    public function login(Request $request)
-//    {
-//        function base64UrlEncode($text)
-//        {
-//            return str_replace(
-//                ['+', '/', '='],
-//                ['-', '_', ''],
-//                base64_encode($text)
-//            );
-//        }
-//
-//        $jwt = $request->getContent();
-//
-//        $secret = getenv('SECRET');
-//
-//        $tokenParts = explode('.', $jwt);
-//        $header = base64_decode(($tokenParts[0]));
-//        $payload = base64_decode(($tokenParts[1]));
-//        $signatureProvided = $tokenParts[2];
-//
-//        $base64UrlHeader = base64UrlEncode($header);
-//        $base64UrlPayload = base64UrlEncode($payload);
-//        $signature = hash_hmac('sha256', $base64UrlHeader . "." . $base64UrlPayload, $secret, true);
-//        $base64UrlSignature = base64UrlEncode($signature);
-//
-//        $signatureValid = ($base64UrlSignature === $signatureProvided);
-//
-//        if ($signatureValid) {
-//            return new JsonResponse([
-//                'Header' => $header,
-//                'Payload' => $payload,
-//                'Signature' => 'Valid']);
-//        } else {
-//            return new JsonResponse("The signature is NOT valid\n");
-//        }
-//
-//    }
-
 
 }

@@ -54,7 +54,12 @@ class ConsumerController extends AbstractController
 
         $result = json_encode($result);
 
-        return new Response($result, Response::HTTP_CREATED);
+        $response = new Response(
+            $result
+        );
+        $response->headers->set('Content-type', 'application/json');
+        $response->headers->set('Access-Control-Allow-Origin','*');
+        return $response;
     }
 
     /**
